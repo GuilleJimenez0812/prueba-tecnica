@@ -7,4 +7,4 @@ export const authentication = (salt: string, password: string) => {
     return crypto.createHmac('sha256', [salt, password].join('/')).update(SECRET).digest('hex')
 }
 
-export const secret = 'soy-una-prueba'
+export const JWT_SECRET  = 'soy-una-prueba'
