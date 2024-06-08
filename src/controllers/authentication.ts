@@ -6,37 +6,28 @@ import bcryptjs from 'bcryptjs'
 import { JWT_EXPIRES, JWT_SECRET } from "../congif"
 
 export const login = async (req: express.Request, res: express.Response) => {
-    // try {
-    //     const { email, password} = req.body
+    try {
+        const { email, password} = req.body
 
-    //     if (!email || !password) {
-    //         return res.sendStatus(400)
-    //     }
+        if (!email || !password) {
+            return res.sendStatus(400)
+        }
 
-    //     const user = await getUserByEmail(email).select('+authentication.salt +authentication.password')
+        const user = await getUserByEmail(email)
 
-    //     if (!user) {
-    //         return res.sendStatus(400)
-    //     }
+        if (!user || !(await bcryptjs.compare(password, user.password))) {
+            return res.sendStatus(400)
+        }
 
-    //     const expectedhash = authentication(user.authentication.salt, password)
+        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES})
 
-    //     if (user.authentication.password !== expectedhash) {
-    //         return res.sendStatus(403)
-    //     }
+        const loggedUser = {id: user._id, username: user.username, email: user.email, token: token}
 
-    //     const salt = random() 
-    //     user.authentication.sessionToken = authentication(salt, user._id.toString())
-
-    //     await user.save()
-
-    //     res.cookie('GUILLERMO-AUTH', user.authentication.sessionToken, { domain: 'localhost', path: '/' })
-
-    //     return res.status(200).json(user).end()
-    // }catch (err) {
-    //     console.log(err)
-    //     return res.sendStatus(400)
-    // }
+        return res.status(200).json({ status: true, data:loggedUser, message: 'Login Succesfull' })
+    }catch (err) {
+        console.log(err)
+        return res.sendStatus(400)
+    }
 }
 
 export const register = async (req: express.Request, res: express.Response) => {
