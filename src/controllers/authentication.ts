@@ -1,4 +1,4 @@
-import { createUser, getUserByEmail } from "../db/user"
+import { createUser, getUserByEmail } from "../repository/user"
 import express from "express"
 import { authentication, random } from "../helpers"
 
