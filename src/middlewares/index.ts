@@ -1,25 +1,29 @@
 import express from 'express'
 import { get, merge } from 'lodash'
 import { getuserBySessionToken } from '../repository/user'
+import jwt from 'jsonwebtoken'
+import { JWT_SECRET } from '../congif'
 
-export const isAuthenticated = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    try {
-        const sessionToken = req.cookies['GUILLERMO-AUTH']
+export const verify = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    let token: string | string[] = req.headers['x-access-token'] || req.headers['authorization']
+    if (Array.isArray(token)) {
+      token = token.join(' ')
+    }
 
-        if (!sessionToken) {
-            return res.sendStatus(403)
-        }
+    if (!token) {
+        return res.status(401).json({ status:false, errors: ['No autorizado']})
+    }
 
-        const existingUser = await getuserBySessionToken(sessionToken)
-
-        if (!existingUser) {
-            return res.sendStatus(403)
-        }
-
-        merge(req, {identity: existingUser})
-    } catch (error) {
-        console.log(error)
-        return res.sendStatus(400)
+    if (token.startsWith('Bearer')) {
+        token = token.slice(7, token.length)
+        jwt.verify(token, JWT_SECRET, (error, decoded) => {
+            if(error) {
+                return res.status(401).json({ status: false, errors: ['Invalid Token']})
+            }
+            else {
+                next()
+            }
+        })
     }
 }
 
