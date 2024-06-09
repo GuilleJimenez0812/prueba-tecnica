@@ -1,4 +1,4 @@
-import { UserModel } from '../db/user'
+import { UserModel } from '../schemas/userSchema'
 
 export const getUsers = () => UserModel.find()
 export const getUserByEmail = (email: string) => UserModel.findOne({email})

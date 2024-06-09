@@ -1,31 +1,26 @@
 import express from 'express'
-import { get, merge } from 'lodash'
-import { getuserBySessionToken } from '../repository/user'
+import { get } from 'lodash'
 import jwt from 'jsonwebtoken'
 import { JWT_SECRET } from '../congif'
+import { extractTokenFromHeader } from '../services/authentication.service'
 
 export const verify = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    let token: string | string[] = req.headers['x-access-token'] || req.headers['authorization']
-    if (Array.isArray(token)) {
-      token = token.join(' ')
-    }
+    const tokenHeader = req.headers['x-access-token'] || req.headers['authorization'];
+    const token = extractTokenFromHeader(tokenHeader);
 
     if (!token) {
-        return res.status(401).json({ status:false, errors: ['No autorizado']})
+        return res.status(401).json({ status:false, errors: ['No autorizado']});
     }
 
-    if (token.startsWith('Bearer')) {
-        token = token.slice(7, token.length)
-        jwt.verify(token, JWT_SECRET, (error, decoded) => {
-            if(error) {
-                return res.status(401).json({ status: false, errors: ['Invalid Token']})
-            }
-            else {
-                next()
-            }
-        })
-    }
-}
+    jwt.verify(token, JWT_SECRET, (error) => {
+        if(error) {
+            return res.status(401).json({ status: false, errors: ['Invalid Token']});
+        }
+        else {
+            next();
+        }
+    });
+};
 
 export const isOwner = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try{
