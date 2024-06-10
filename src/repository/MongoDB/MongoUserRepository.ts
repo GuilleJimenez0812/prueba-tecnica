@@ -10,10 +10,6 @@ export class MongoUserRepository implements IUserRepository {
     return UserModel.findOne({ email }).then((user) => user?.toObject())
   }
 
-  async getUserBySessionToken(sessionToken: string): Promise<any | null> {
-    return UserModel.findOne({ 'authentication.sessionToken': sessionToken }).then((user) => user?.toObject())
-  }
-
   async getUserById(id: string): Promise<any | null> {
     return UserModel.findById(id).then((user) => user?.toObject())
   }
