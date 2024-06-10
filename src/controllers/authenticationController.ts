@@ -1,5 +1,6 @@
 import express from 'express'
 import { AuthenticationService } from '../services/authenticationService'
+import { LoggedUserDto, UserDto } from '../dto/UserDto'
 
 export class AuthenticationController {
   private authService: AuthenticationService
@@ -18,12 +19,14 @@ export class AuthenticationController {
     }
 
     try {
-      const loggedUser = await this.authService.login(email, password)
+      const loggedUser: LoggedUserDto = await this.authService.login(email, password)
 
       return res.status(200).json({ status: true, data: loggedUser, message: 'Login Successful' })
     } catch (err) {
-      console.error(err)
-      return res.status(err.statusCode).json({ error: err.data })
+      const statusCode = err.statusCode || 500
+      const message = err.message || 'An unexpected error occurred'
+
+      return res.status(statusCode).json({ error: { statusCode, message } })
     }
   }
 
@@ -31,10 +34,13 @@ export class AuthenticationController {
     const { email, password, username } = req.body
 
     try {
-      const user = await this.authService.register(email, password, username)
+      const user: UserDto = await this.authService.register(email, password, username)
       return res.status(200).json({ status: true, data: user, message: 'User created successfully' })
     } catch (err) {
-      return res.status(err.statusCode).json({ error: err.data })
+      const statusCode = err.statusCode || 500
+      const message = err.message || 'An unexpected error occurred'
+
+      return res.status(statusCode).json({ error: { statusCode, message } })
     }
   }
 }

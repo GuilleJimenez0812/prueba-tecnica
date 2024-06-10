@@ -1,5 +1,6 @@
-import express from "express";
+import express from 'express'
 import { UserService } from '../services/userService'
+import { UserDto } from '../dto/UserDto'
 
 export class UserController {
   private userService: UserService
@@ -12,7 +13,7 @@ export class UserController {
 
   async getAllUsers(req: express.Request, res: express.Response) {
     try {
-      const users = await this.userService.getAllUsers()
+      const users: UserDto[] = await this.userService.getAllUsers()
       return res.status(200).json(users)
     } catch (err) {
       console.error(err)
@@ -23,7 +24,7 @@ export class UserController {
   async deleteUser(req: express.Request, res: express.Response) {
     try {
       const { id } = req.params
-      const deletedUser = await this.userService.removeUserById(id)
+      const deletedUser: UserDto = await this.userService.removeUserById(id)
       if (!deletedUser) {
         return res.status(404).json({ error: 'User not found' })
       }
@@ -37,21 +38,14 @@ export class UserController {
   async updateUser(req: express.Request, res: express.Response) {
     try {
       const { id } = req.params
-      const { username } = req.body
+      const updateValues = req.body
 
-      if (!username) {
-        return res.status(400).json({ error: 'Username is required' })
-      }
-
-      const user = await this.userService.findUserById(id)
-      if (!user) {
+      const updatedUser: UserDto = await this.userService.updateUserDetails(id, updateValues)
+      if (!updatedUser) {
         return res.status(404).json({ error: 'User not found' })
       }
 
-      user.username = username
-      await user.save()
-
-      return res.status(200).json({ message: 'User updated successfully' })
+      return res.status(200).json(updatedUser)
     } catch (err) {
       console.error(err)
       return res.status(400).json({ error: 'Failed to update user' })

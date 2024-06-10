@@ -1,8 +1,10 @@
+import { UserDto } from '../../dto/UserDto'
+
 export interface IUserRepository {
-  getUsers(): Promise<any[]>
-  getUserByEmail(email: string): Promise<any | null>
-  getUserById(id: string): Promise<any | null>
-  createUser(value: Record<string, any>): Promise<any>
-  deleteUserById(id: string): Promise<any>
-  updateUserById(id: string, values: Record<string, any>): Promise<any>
+  getUsers(): Promise<UserDto[]>
+  getUserByEmail(email: string): Promise<UserDto | null>
+  getUserById(id: string): Promise<UserDto | null>
+  createUser(value: Record<string, any>): Promise<UserDto>
+  deleteUserById(id: string): Promise<UserDto>
+  updateUserById(id: string, values: Record<string, any>): Promise<UserDto>
 }

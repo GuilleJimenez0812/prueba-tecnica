@@ -1,6 +1,10 @@
 export interface UserDto {
-  id: string
+  _id: string
   username: string
   email: string
-  password: string
+  password?: string
+}
+
+export interface LoggedUserDto extends UserDto {
+  token: string
 }

@@ -1,9 +1,11 @@
+import { ProductDto } from "../../dto/ProductDto"
+
 export interface IProductRepository {
-    getProducts(): Promise<any[]>
-    getProductById(id: string): Promise<any | null>
-    getProductByProductName(productName: string): Promise<any | null>
-    getProductByAvailability(): Promise<any | null>
-    createProduct(value: Record<string, any>): Promise<any>
-    deleteProductById(id: string): Promise<any>
-    updateProductById(id: string, values: Record<string, any>): Promise<any>
+  getProducts(): Promise<ProductDto[]>
+  getProductById(id: string): Promise<ProductDto | null>
+  getProductByProductName(productName: string): Promise<ProductDto | null>
+  getProductByAvailability(): Promise<ProductDto[] | null>
+  createProduct(value: Record<string, any>): Promise<ProductDto>
+  deleteProductById(id: string): Promise<any>
+  updateProductById(id: string, values: Record<string, any>): Promise<ProductDto>
 }

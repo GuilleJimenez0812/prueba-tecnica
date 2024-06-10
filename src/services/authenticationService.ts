@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 import bcryptjs from 'bcryptjs'
 import { CustomError } from '../dto/customError'
 import { UserService } from './userService'
+import { LoggedUserDto, UserDto } from '../dto/UserDto'
 
 export class AuthenticationService {
   userService: UserService
@@ -11,49 +12,38 @@ export class AuthenticationService {
     this.userService = new UserService()
   }
 
-  async login(email: string, password: string) {
-    
-    try {
-      if (typeof email !== 'string') throw new CustomError('The email does not match the format.', 401)
-      if (typeof password !== 'string') throw new CustomError('The password does not match the format.', 401)
-    
-      const user = await this.userService.findUserByEmail(email)
+  async login(email: string, password: string): Promise<LoggedUserDto> {
+    if (typeof email !== 'string') throw new CustomError('The email does not match the format.', 401)
+    if (typeof password !== 'string') throw new CustomError('The password does not match the format.', 401)
 
-      if (!user || !(await bcryptjs.compare(password, user.password))) {
-        throw new CustomError('Invalid email or password.', 401)
-      }
+    const user: UserDto = await this.userService.findUserByEmail(email)
 
-      const token = this.generateToken(user._id.toString())
-      const loggedUser = { id: user._id, username: user.username, email: user.email, token }
-
-      return loggedUser
-    } catch (err) {
-      return err
+    if (!user || !(await bcryptjs.compare(password, user.password))) {
+      throw new CustomError('Invalid email or password.', 401)
     }
+
+    const token = this.generateToken(user._id.toString())
+    const loggedUser: LoggedUserDto = { _id: user._id, username: user.username, email: user.email, token }
+
+    return loggedUser
   }
 
-  async register(email: string, password: string, username: string) {
-    try {
-      if (typeof email !== 'string') throw new CustomError('The email does not match the format.', 401)
-      if (typeof password !== 'string') throw new CustomError('The password does not match the format.', 401)
-      if (typeof username !== 'string') throw new CustomError('The username does not match the format.', 401)
-    
-      if (!this.validateRegisterRequest(email, password, username)) 
-        throw new CustomError('Registration request validation failed: Email, password, or username does not meet the required criteria.', 401)
-      
+  async register(email: string, password: string, username: string): Promise<UserDto> {
+    if (typeof email !== 'string') throw new CustomError('The email does not match the format.', 401)
+    if (typeof password !== 'string') throw new CustomError('The password does not match the format.', 401)
+    if (typeof username !== 'string') throw new CustomError('The username does not match the format.', 401)
 
-      if (await this.userService.findUserByEmail(email)) 
-        throw new CustomError('User already exists.', 409)
+    if (!this.validateRegisterRequest(email, password, username))
+      throw new CustomError('Registration request validation failed: Email, password, or username does not meet the required criteria.', 401)
 
-      const user = await this.userService.registerUser({
-        email,
-        username,
-        password: await this.encryptPassword(password)
-      })
-      return user
-    } catch (err) {
-      return err
-    }
+    if (await this.userService.findUserByEmail(email)) throw new CustomError('User already exists.', 409)
+
+    const user: UserDto = await this.userService.registerUser({
+      email,
+      username,
+      password: await this.encryptPassword(password),
+    })
+    return user
   }
 
   extractTokenFromHeader(header: string | string[]): string | null {
