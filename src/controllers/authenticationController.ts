@@ -1,28 +1,31 @@
 import { createUser, getUserByEmail } from '../repository/userRepository'
 import express from 'express'
 import bcryptjs from 'bcryptjs'
-import authenticationService from '../services/authentication.service'
+import { AuthenticationService } from '../services/authenticationService'
 
-export const login = async (req: express.Request, res: express.Response) => {
-  const { email, password } = req.body
+export class AuthenticationController {
+  private authService: AuthenticationService
 
-  if (!authenticationService.validateLoginRequest(email, password)) {
-    return res.status(400).json({ error: 'Email and password are required.' })
+  constructor() {
+    this.authService = new AuthenticationService()
+    this.login = this.login.bind(this)
   }
 
-  try {
-    const user = await getUserByEmail(email)
-    if (!user || !(await bcryptjs.compare(password, user.password))) {
-      return res.status(401).json({ error: 'Invalid email or password.' })
+  async login(req: express.Request, res: express.Response) {
+    const { email, password } = req.body
+
+    if (!this.authService.validateLoginRequest(email, password)) {
+      return res.status(400).json({ error: 'Email and password are required.' })
     }
 
-    const token = authenticationService.generateToken(user._id.toString())
-    const loggedUser = { id: user._id, username: user.username, email: user.email, token }
+    try {
+      const loggedUser = await this.authService.login(email, password)
 
-    return res.status(200).json({ status: true, data: loggedUser, message: 'Login Successful' })
-  } catch (err) {
-    console.error(err)
-    return res.status(500).json({ error: 'An error occurred during login.' })
+      return res.status(200).json({ status: true, data: loggedUser, message: 'Login Successful' })
+    } catch (err) {
+      console.error(err)
+      return res.status(err.statusCode).json({ error: err.data })
+    }
   }
 }
 

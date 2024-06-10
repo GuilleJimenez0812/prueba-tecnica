@@ -1,7 +1,8 @@
 import express from 'express'
-import { login, register } from '../controllers/authenticationController'
+import { AuthenticationController, register } from '../controllers/authenticationController'
 
 export default (router: express.Router) => {
+    const authController = new AuthenticationController()
     router.post('/auth/register', register)
-    router.post('/auth/login', login)
+    router.post('/auth/login', authController.login)
 }

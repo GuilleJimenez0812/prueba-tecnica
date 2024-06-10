@@ -2,11 +2,13 @@ import express from 'express'
 import { get } from 'lodash'
 import jwt from 'jsonwebtoken'
 import { JWT_SECRET } from '../congif'
-import authenticationService from '../services/authentication.service'
+import { AuthenticationService } from '../services/authenticationService'
+
+const authService = new AuthenticationService()
 
 export const verify = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
   const tokenHeader = req.headers['x-access-token'] || req.headers['authorization']
-  const token = authenticationService.extractTokenFromHeader(tokenHeader)
+  const token = authService.extractTokenFromHeader(tokenHeader)
 
   if (!token) {
     return res.status(401).json({ status: false, errors: ['No autorizado'] })
