@@ -1,7 +1,7 @@
-import { IUserRepository } from 'repository/Interfaces/IUserRepository'
-import { MongoUserRepository } from 'repository/MongoDB/MongoUserRepository'
+import { IUserRepository } from '../repository/Interfaces/IUserRepository'
+import { MongoUserRepository } from '../repository/MongoDB/MongoUserRepository'
 
-class UserService {
+export class UserService {
   private userRepository: IUserRepository
 
   constructor() {

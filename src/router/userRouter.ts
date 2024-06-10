@@ -1,9 +1,10 @@
 import express from 'express'
 import { deleteUser, getAllUsers, updateUser } from '../controllers/userController'
-import { isOwner, verify } from '../middlewares/authenticationMiddleware'
+import { AuthenticationMiddleware } from '../middlewares/authenticationMiddleware'
 
 export default (router: express.Router) => {
-    router.get('/users', verify, getAllUsers)
-    router.delete('users/:id', verify, isOwner, deleteUser)
-    router.patch('/users/:id', verify, isOwner, updateUser)
+    const authMiddleware = new AuthenticationMiddleware()
+    router.get('/users', authMiddleware.verify, getAllUsers)
+    router.delete('users/:id', authMiddleware.verify, authMiddleware.isOwner, deleteUser)
+    router.patch('/users/:id', authMiddleware.verify, authMiddleware.isOwner, updateUser)
 }

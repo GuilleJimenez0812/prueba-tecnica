@@ -1,32 +1,48 @@
-import { IUserRepository } from 'repository/Interfaces/IUserRepository'
-import { MongoUserRepository } from '../repository/MongoDB/MongoUserRepository'
 import { JWT_SECRET, JWT_EXPIRES } from '../congif'
 import jwt from 'jsonwebtoken'
 import bcryptjs from 'bcryptjs'
 import { CustomError } from '../dto/customError'
-import { UsersUtils } from '../utils/usersUtils'
+import { UserService } from './userService'
 
 export class AuthenticationService {
-  private userRepository: IUserRepository
-  private userUtils: UsersUtils
+  private userService: UserService
 
   constructor() {
-    this.userRepository = new MongoUserRepository()
-    this.userUtils = new UsersUtils()
+    this.userService = new UserService()
   }
 
   async login(email: string, password: string) {
     try {
-      const user = await this.userRepository.getUserByEmail(email)
+      const user = await this.userService.findUserByEmail(email)
 
       if (!user || !(await bcryptjs.compare(password, user.password))) {
         throw new CustomError('Invalid email or password.', 401)
       }
 
       const token = this.generateToken(user._id.toString())
-      const loggedUser = { id: this.userUtils.generarUUID(), username: user.username, email: user.email, token }
+      const loggedUser = { id: user._id, username: user.username, email: user.email, token }
 
       return loggedUser
+    } catch (err) {
+      return err
+    }
+  }
+
+  async register(email: string, password: string, username: string) {
+    try {
+      if (!this.validateRegisterRequest(email, password, username)) 
+        throw new CustomError('Registration request validation failed: Email, password, or username does not meet the required criteria.', 401)
+      
+
+      if (await this.userService.findUserByEmail(email)) 
+        throw new CustomError('User already exists.', 409)
+
+      const user = await this.userService.registerUser({
+        email,
+        username,
+        password: await this.encryptPassword(password)
+      })
+      return user
     } catch (err) {
       return err
     }
@@ -52,5 +68,9 @@ export class AuthenticationService {
 
   validateRegisterRequest(email: string, password: string, username: string): boolean {
     return email.length > 0 && password.length > 0 && username.length > 0
+  }
+
+  async encryptPassword(password: string): Promise<string> {
+    return bcryptjs.hash(password, 10)
   }
 }

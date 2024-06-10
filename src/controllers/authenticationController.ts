@@ -9,6 +9,7 @@ export class AuthenticationController {
   constructor() {
     this.authService = new AuthenticationService()
     this.login = this.login.bind(this)
+    this.register = this.register.bind(this)
   }
 
   async login(req: express.Request, res: express.Response) {
@@ -27,35 +28,15 @@ export class AuthenticationController {
       return res.status(err.statusCode).json({ error: err.data })
     }
   }
-}
 
-export const register = async (req: express.Request, res: express.Response) => {
-  try {
+  async register(req: express.Request, res: express.Response) {
     const { email, password, username } = req.body
 
-    if (!email || !password || !username) {
-      return res.sendStatus(400)
+    try {
+      const user = await this.authService.register(email, password, username)
+      return res.status(200).json({ status: true, data: user, message: 'User created successfully' })
+    } catch (err) {
+      return res.status(err.statusCode).json({ error: err.data })
     }
-
-    const existingUser = await getUserByEmail(email)
-
-    if (existingUser) {
-      return res.sendStatus(409)
-    }
-
-    // const salt = random()
-    let pass = await bcryptjs.hash(password, 10)
-
-    const user = await createUser({
-      email,
-      username,
-      password: pass,
-    })
-
-    return res.status(200).json({ satatus: true, message: 'Usuario creado' }).end()
-  } catch (err) {
-    console.log(err)
-    // return res.sendStatus(400)
-    return res.status(500).json({ status: false, message: [err.message] })
   }
 }
