@@ -5,14 +5,18 @@ import { CustomError } from '../dto/customError'
 import { UserService } from './userService'
 
 export class AuthenticationService {
-  private userService: UserService
+  userService: UserService
 
   constructor() {
     this.userService = new UserService()
   }
 
   async login(email: string, password: string) {
+    
     try {
+      if (typeof email !== 'string') throw new CustomError('The email does not match the format.', 401)
+      if (typeof password !== 'string') throw new CustomError('The password does not match the format.', 401)
+    
       const user = await this.userService.findUserByEmail(email)
 
       if (!user || !(await bcryptjs.compare(password, user.password))) {
@@ -30,6 +34,10 @@ export class AuthenticationService {
 
   async register(email: string, password: string, username: string) {
     try {
+      if (typeof email !== 'string') throw new CustomError('The email does not match the format.', 401)
+      if (typeof password !== 'string') throw new CustomError('The password does not match the format.', 401)
+      if (typeof username !== 'string') throw new CustomError('The username does not match the format.', 401)
+    
       if (!this.validateRegisterRequest(email, password, username)) 
         throw new CustomError('Registration request validation failed: Email, password, or username does not meet the required criteria.', 401)
       
