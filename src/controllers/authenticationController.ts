@@ -1,6 +1,4 @@
-import { createUser, getUserByEmail } from '../repository/userRepository'
 import express from 'express'
-import bcryptjs from 'bcryptjs'
 import { AuthenticationService } from '../services/authenticationService'
 
 export class AuthenticationController {
