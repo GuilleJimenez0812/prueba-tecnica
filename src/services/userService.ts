@@ -2,6 +2,7 @@ import { UserDto } from 'dto/UserDto'
 import { IUserRepository } from '../repository/Interfaces/IUserRepository'
 import { MongoUserRepository } from '../repository/MongoDB/MongoUserRepository'
 import { UsersUtils } from '../utils/usersUtils'
+import { CustomError } from '../dto/customError'
 
 export class UserService {
   constructor(
@@ -33,6 +34,7 @@ export class UserService {
   }
 
   async updateUserDetails(id: string, updateValues: Record<string, any>): Promise<UserDto> {
+    await this.isEmailRegistered(updateValues)
     await this.encryptPasswordIfNeeded(updateValues)
     return await this.userRepository.updateUserById(id, updateValues)
   }
@@ -40,6 +42,13 @@ export class UserService {
   private async encryptPasswordIfNeeded(updateValues: Record<string, any>): Promise<void> {
     if (updateValues.password) {
       updateValues.password = await this.userUtils.encryptPassword(updateValues.password)
+    }
+  }
+
+  private async isEmailRegistered(updateValues: Record<string, any>): Promise<void> {
+    if (updateValues.email) {
+      const user = await this.userRepository.getUserByEmail(updateValues.email)
+      if (user) throw new CustomError('Email already registered', 400)
     }
   }
 }

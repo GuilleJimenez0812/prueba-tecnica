@@ -5,18 +5,19 @@ import { CustomError } from '../dto/customError'
 import { UserService } from './userService'
 import { LoggedUserDto, UserDto } from '../dto/UserDto'
 import { UsersUtils } from '../utils/usersUtils'
+import { VerificationUtils } from '../utils/verificationUtils'
 
 export class AuthenticationService {
   constructor(
     private userService: UserService = new UserService(),
     private userUtils: UsersUtils = new UsersUtils(),
+    private verificationUtils: VerificationUtils = new VerificationUtils()
   ) {
     this.userService = userService
   }
 
   async login(email: string, password: string): Promise<LoggedUserDto> {
-    if (typeof email !== 'string') throw new CustomError('The email does not match the format.', 400)
-    if (typeof password !== 'string') throw new CustomError('The password does not match the format.', 400)
+    this.verificationUtils.validateParameters({ email, password }, { email: 'string', password: 'string' })
 
     const user: UserDto = await this.userService.findUserByEmail(email)
 
@@ -31,9 +32,7 @@ export class AuthenticationService {
   }
 
   async register(email: string, password: string, username: string): Promise<UserDto> {
-    if (typeof email !== 'string') throw new CustomError('The email does not match the format.', 401)
-    if (typeof password !== 'string') throw new CustomError('The password does not match the format.', 401)
-    if (typeof username !== 'string') throw new CustomError('The username does not match the format.', 401)
+    this.verificationUtils.validateParameters({ email, password, username }, { email: 'string', password: 'string', username: 'string' })
 
     if (!this.validateRegisterRequest(email, password, username))
       throw new CustomError('Registration request validation failed: Email, password, or username does not meet the required criteria.', 401)

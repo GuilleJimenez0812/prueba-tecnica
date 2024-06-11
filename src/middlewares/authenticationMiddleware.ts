@@ -34,8 +34,9 @@ export class AuthenticationMiddleware {
 
   public async isOwner(req: CustomRequest, res: express.Response, next: express.NextFunction) {
     try {
-      const { id } = req.params
-      const currentUserId = get(req, 'identity._id') as string
+      const { id } = req.params 
+      const currentUserId = req.user.id
+      
 
       if (!currentUserId) {
         return res.sendStatus(403)
