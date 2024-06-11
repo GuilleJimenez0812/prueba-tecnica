@@ -63,7 +63,9 @@ export class OrderService {
     this.verifyOrderOwnership(currentOrder, user_id)
 
     const nextStatus = this.getNextOrderStatus(currentOrder.status)
-    return this.orderRepository.updateOrderStatus(order_id, nextStatus)
+    const endDate = this.assignOrderEndDate(nextStatus)
+    if (!endDate) return this.orderRepository.updateOrderStatus(order_id, nextStatus)
+    else return this.orderRepository.updateOrderStatus(order_id, nextStatus, endDate)
   }
 
   private async verifyOrderOwnership(order: OrderDto, user_id: string): Promise<void> {
@@ -100,10 +102,20 @@ export class OrderService {
       await this.productService.restoreAvailability(id, currentOrder.quantity[index])
     })
 
-    return this.orderRepository.updateOrderStatus(order_id, 'canceled')
+    const endDate = this.assignOrderEndDate('canceled')
+
+    if (!endDate) return this.orderRepository.updateOrderStatus(order_id, 'canceled')
+    else return this.orderRepository.updateOrderStatus(order_id, 'canceled', endDate)
   }
 
   private verifyOrderStatus(order: OrderDto): boolean {
     return order.status === 'order received'
+  }
+
+  private assignOrderEndDate(status: string): Date | null {
+    if (status === 'order received' || status === 'canceled') {
+      return new Date()
+    }
+    return null
   }
 }

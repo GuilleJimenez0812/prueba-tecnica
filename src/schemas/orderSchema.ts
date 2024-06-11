@@ -19,6 +19,8 @@ const OrderSchema = new mongoose.Schema({
     required: true,
     enum: ['validating order', 'order sent', 'order received', 'canceled'],
   },
+  issueDate: { type: Date, required: true },
+  end_date: { type: String, required: false}
 })
 
 export const OrderModel = mongoose.model('Order', OrderSchema)

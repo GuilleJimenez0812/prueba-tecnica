@@ -9,6 +9,7 @@ export class MongoOrderRepository implements IOrderRepository {
       user_id,
       quantity,
       status: 'validating order',
+      issueDate: new Date(),
     })
     return newOrder.save().then((order) => order.toObject())
   }
@@ -33,8 +34,14 @@ export class MongoOrderRepository implements IOrderRepository {
       .then((orders) => orders.map((order) => order.toObject()))
   }
 
-  async updateOrderStatus(order_id: string, status: string): Promise<OrderDto> {
-    return OrderModel.findByIdAndUpdate(order_id, { status }, { new: true }).then((order) => order?.toObject())
+  async updateOrderStatus(order_id: string, status: string, end_date?: Date): Promise<OrderDto> {
+    const updateObject: { status: string; end_date?: Date } = { status }
+
+    if (end_date) {
+      updateObject.end_date = end_date
+    }
+
+    return OrderModel.findByIdAndUpdate(order_id, updateObject, { new: true }).then((order) => order?.toObject())
   }
 
   async deleteOrder(order_id: string): Promise<OrderDto> {

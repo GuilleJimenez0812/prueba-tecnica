@@ -5,6 +5,6 @@ export interface IOrderRepository {
   getOrders(page?: number, limit?: number): Promise<OrderDto[]>
   getOrderById(order_id: string): Promise<OrderDto>
   getOrdersByUser(user_id: string, page?: number, limit?: number): Promise<OrderDto[]>
-  updateOrderStatus(order_id: string, status: string): Promise<OrderDto>
+  updateOrderStatus(order_id: string, status: string, end_date?: Date): Promise<OrderDto>
   deleteOrder(order_id: string): Promise<OrderDto>
 }
