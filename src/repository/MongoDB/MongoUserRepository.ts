@@ -3,18 +3,22 @@ import { UserModel } from '../../schemas/userSchema'
 import { UserDto } from '../../dto/UserDto'
 
 export class MongoUserRepository implements IUserRepository {
-  async getUsers(): Promise<UserDto[]> {
-    return UserModel.find().then((users) =>
-      users.map((user) => {
-        const userObject = user.toObject()
-        const userDto: UserDto = {
-          _id: userObject._id.toString(),
-          username: userObject.username,
-          email: userObject.email,
-        }
-        return userDto
-      }),
-    )
+  async getUsers(page: number = 1, limit: number = 10): Promise<UserDto[]> {
+    const skip = (page - 1) * limit
+    return UserModel.find()
+      .skip(skip)
+      .limit(limit)
+      .then((users) =>
+        users.map((user) => {
+          const userObject = user.toObject()
+          const userDto: UserDto = {
+            _id: userObject._id.toString(),
+            username: userObject.username,
+            email: userObject.email,
+          }
+          return userDto
+        }),
+      )
   }
 
   async getUserByEmail(email: string): Promise<UserDto | null> {

@@ -14,7 +14,9 @@ export class UserController {
 
   async getAllUsers(req: CustomRequest, res: express.Response) {
     try {
-      const users: UserDto[] = await this.userService.getAllUsers()
+      const page = parseInt(req.query.page as string) || 1
+      const limit = parseInt(req.query.limit as string) || 10
+      const users: UserDto[] = await this.userService.getAllUsers(page, limit)
       return res.status(200).json(users)
     } catch (err) {
       console.error(err)

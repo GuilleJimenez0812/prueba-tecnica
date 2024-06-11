@@ -4,12 +4,14 @@ import bcryptjs from 'bcryptjs'
 import { CustomError } from '../dto/customError'
 import { UserService } from './userService'
 import { LoggedUserDto, UserDto } from '../dto/UserDto'
+import { UsersUtils } from '../utils/usersUtils'
 
 export class AuthenticationService {
-  userService: UserService
-
-  constructor() {
-    this.userService = new UserService()
+  constructor(
+    private userService: UserService = new UserService(),
+    private userUtils: UsersUtils = new UsersUtils(),
+  ) {
+    this.userService = userService
   }
 
   async login(email: string, password: string): Promise<LoggedUserDto> {
@@ -41,7 +43,7 @@ export class AuthenticationService {
     const user: UserDto = await this.userService.registerUser({
       email,
       username,
-      password: await this.encryptPassword(password),
+      password: await this.userUtils.encryptPassword(password),
     })
     return user
   }
@@ -66,9 +68,5 @@ export class AuthenticationService {
 
   validateRegisterRequest(email: string, password: string, username: string): boolean {
     return email.length > 0 && password.length > 0 && username.length > 0
-  }
-
-  async encryptPassword(password: string): Promise<string> {
-    return bcryptjs.hash(password, 10)
   }
 }

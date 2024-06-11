@@ -1,7 +1,7 @@
-import { v4 as uuidv4 } from 'uuid'
+import bcryptjs from 'bcryptjs'
 
 export class UsersUtils {
-  generarUUID(): string {
-    return uuidv4()
+  async encryptPassword(password: string): Promise<string> {
+    return bcryptjs.hash(password, 10)
   }
 }
