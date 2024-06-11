@@ -3,7 +3,6 @@ import { ProductService } from '../services/productService'
 import { CustomRequest } from '../dto/Request'
 
 export class ProductController {
-
   constructor(private productService: ProductService = new ProductService()) {
     this.productService = productService
     this.getProductsByAvailability = this.getProductsByAvailability.bind(this)
@@ -13,11 +12,25 @@ export class ProductController {
     this.createProductsBatch = this.createProductsBatch.bind(this)
     this.updateProductsBatch = this.updateProductsBatch.bind(this)
     this.deleteProductsBatch = this.deleteProductsBatch.bind(this)
+    this.getProducts = this.getProducts.bind(this)
+  }
+
+  async getProducts(req: CustomRequest, res: express.Response) {
+    try {
+      const page = parseInt(req.query.page as string) || 1
+      const limit = parseInt(req.query.limit as string) || 10
+      const products = await this.productService.obtainProducts(page, limit)
+      return res.status(200).json(products)
+    } catch (err) {
+      return res.status(400).json({ error: 'Failed to fetch products' })
+    }
   }
 
   async getProductsByAvailability(req: CustomRequest, res: express.Response) {
     try {
-      const products = await this.productService.obtainProductsByAvailability()
+      const page = parseInt(req.query.page as string) || 1
+      const limit = parseInt(req.query.limit as string) || 10
+      const products = await this.productService.obtainProductsByAvailability(page, limit)
       return res.status(200).json(products)
     } catch (err) {
       return res.status(400).json({ error: 'Failed to fetch products' })

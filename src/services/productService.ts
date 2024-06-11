@@ -8,8 +8,8 @@ export class ProductService {
     this.productRepository = productRepository
   }
 
-  async obtainProducts() {
-    return await this.productRepository.getProducts()
+  async obtainProducts(page?: number, limit?: number) {
+    return await this.productRepository.getProducts(page, limit)
   }
 
   async obtainProductById(id: string) {
@@ -20,12 +20,12 @@ export class ProductService {
     return await this.productRepository.getProductByProductName(productName)
   }
 
-  async obtainProductsByAvailability() {
-    return await this.productRepository.getProductByAvailability()
+  async obtainProductsByAvailability(page?: number, limit?: number) {
+    return await this.productRepository.getProductByAvailability(page, limit)
   }
 
   async createProduct(value: Record<string, any>) {
-    if (this.nameProductAlreadyExists(value.product_name)) throw new CustomError(`Product ${value.product_name} already exists`, 409)
+    if (await this.nameProductAlreadyExists(value.product_name)) throw new CustomError(`Product ${value.product_name} already exists`, 409)
 
     return await this.productRepository.createProduct(value)
   }
@@ -54,7 +54,7 @@ export class ProductService {
   async updateProductsBatch(productsData: Record<string, any>[]): Promise<ProductDto[]> {
     const updatedProducts = []
     for (const productData of productsData) {
-      const updatedProduct = await this.productRepository.updateProductById(productData.id, productData)
+      const updatedProduct = await this.productRepository.updateProductById(productData._id, productData)
       if (updatedProduct) {
         updatedProducts.push(updatedProduct)
       }

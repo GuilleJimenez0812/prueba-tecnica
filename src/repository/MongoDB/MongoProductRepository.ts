@@ -3,8 +3,12 @@ import { ProductModel } from '../../schemas/productSchema'
 import { IProductRepository } from '../Interfaces/IProductRepository' 
 
 export class MongoProductRepository implements IProductRepository {
-  async getProducts(): Promise<ProductDto[]> {
-    return ProductModel.find().then((products) => products.map((product) => product.toObject()))
+  async getProducts(page: number = 1, limit: number = 10): Promise<ProductDto[]> {
+    const skip = (page - 1) * limit
+    return ProductModel.find()
+      .skip(skip)
+      .limit(limit)
+      .then((products) => products.map((product) => product.toObject()))
   }
 
   async getProductById(id: string): Promise<ProductDto | null> {
@@ -15,8 +19,12 @@ export class MongoProductRepository implements IProductRepository {
     return ProductModel.findOne({ product_name: productName }).then((product) => product?.toObject())
   }
 
-  async getProductByAvailability(): Promise<ProductDto[]> {
-    return ProductModel.find({ availability: { $ne: 0 } }).then((products) => products.map((product) => product.toObject()))
+  async getProductByAvailability(page: number = 1, limit: number = 10): Promise<ProductDto[]> {
+    const skip = (page - 1) * limit
+    return ProductModel.find({ availability: { $ne: 0 } })
+      .skip(skip)
+      .limit(limit)
+      .then((products) => products.map((product) => product.toObject()))
   }
 
   async createProduct(value: Record<string, any>): Promise<ProductDto> {
