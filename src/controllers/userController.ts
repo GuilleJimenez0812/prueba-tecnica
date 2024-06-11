@@ -1,6 +1,7 @@
 import express from 'express'
 import { UserService } from '../services/userService'
 import { UserDto } from '../dto/UserDto'
+import { CustomRequest } from '../dto/Request'
 
 export class UserController {
   private userService: UserService
@@ -11,7 +12,7 @@ export class UserController {
     this.updateUser = this.updateUser.bind(this)
   }
 
-  async getAllUsers(req: express.Request, res: express.Response) {
+  async getAllUsers(req: CustomRequest, res: express.Response) {
     try {
       const users: UserDto[] = await this.userService.getAllUsers()
       return res.status(200).json(users)
@@ -21,7 +22,7 @@ export class UserController {
     }
   }
 
-  async deleteUser(req: express.Request, res: express.Response) {
+  async deleteUser(req: CustomRequest, res: express.Response) {
     try {
       const { id } = req.params
       const deletedUser: UserDto = await this.userService.removeUserById(id)
@@ -35,7 +36,7 @@ export class UserController {
     }
   }
 
-  async updateUser(req: express.Request, res: express.Response) {
+  async updateUser(req: CustomRequest, res: express.Response) {
     try {
       const { id } = req.params
       const updateValues = req.body

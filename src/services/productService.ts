@@ -4,10 +4,8 @@ import { CustomError } from '../dto/customError'
 import { ProductDto } from '../dto/ProductDto'
 
 export class ProductService {
-  private productRepository: IProductRepository
-
-  constructor() {
-    this.productRepository = new MongoProductRepository()
+  constructor(private productRepository: IProductRepository = new MongoProductRepository()) {
+    this.productRepository = productRepository
   }
 
   async obtainProducts() {
@@ -78,5 +76,26 @@ export class ProductService {
   async nameProductAlreadyExists(product_name: string): Promise<boolean> {
     const product = await this.productRepository.getProductByProductName(product_name)
     return !!product
+  }
+
+  async checkAvailability(product_id: string, order_quantity: number): Promise<boolean> {
+    let product = await this.obtainProductById(product_id)
+
+    if (product.availability < order_quantity) return false
+
+    await this.updateAvailability(product, order_quantity)
+    return true
+  }
+
+  async updateAvailability(product: ProductDto, order_quantity: number) {
+    product.availability -= order_quantity
+    await this.updateProductById(product._id, product)
+  }
+
+  async restoreAvailability(product_id: string, order_quantity: number) {
+    const product: ProductDto = await this.obtainProductById(product_id)
+
+    product.availability += order_quantity
+    await this.updateProductById(product._id, product)
   }
 }

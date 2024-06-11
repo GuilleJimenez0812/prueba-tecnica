@@ -1,11 +1,11 @@
 import express from 'express'
 import { ProductService } from '../services/productService'
+import { CustomRequest } from '../dto/Request'
 
 export class ProductController {
-  private productService: ProductService
 
-  constructor() {
-    this.productService = new ProductService()
+  constructor(private productService: ProductService = new ProductService()) {
+    this.productService = productService
     this.getProductsByAvailability = this.getProductsByAvailability.bind(this)
     this.createProduct = this.createProduct.bind(this)
     this.deleteProductById = this.deleteProductById.bind(this)
@@ -15,7 +15,7 @@ export class ProductController {
     this.deleteProductsBatch = this.deleteProductsBatch.bind(this)
   }
 
-  async getProductsByAvailability(req: express.Request, res: express.Response) {
+  async getProductsByAvailability(req: CustomRequest, res: express.Response) {
     try {
       const products = await this.productService.obtainProductsByAvailability()
       return res.status(200).json(products)
@@ -24,7 +24,7 @@ export class ProductController {
     }
   }
 
-  async createProduct(req: express.Request, res: express.Response) {
+  async createProduct(req: CustomRequest, res: express.Response) {
     try {
       const productData = req.body
       const product = await this.productService.createProduct(productData)
@@ -37,7 +37,7 @@ export class ProductController {
     }
   }
 
-  async deleteProductById(req: express.Request, res: express.Response) {
+  async deleteProductById(req: CustomRequest, res: express.Response) {
     try {
       const { id } = req.params
       const deletedProduct = await this.productService.deleteProductById(id)
@@ -50,7 +50,7 @@ export class ProductController {
     }
   }
 
-  async updateProductById(req: express.Request, res: express.Response) {
+  async updateProductById(req: CustomRequest, res: express.Response) {
     try {
       const { id } = req.params
       const productData = req.body
@@ -64,7 +64,7 @@ export class ProductController {
     }
   }
 
-  async createProductsBatch(req: express.Request, res: express.Response) {
+  async createProductsBatch(req: CustomRequest, res: express.Response) {
     try {
       const productsData = req.body
       const createdProducts = await this.productService.createProductsBatch(productsData)
@@ -74,7 +74,7 @@ export class ProductController {
     }
   }
 
-  async updateProductsBatch(req: express.Request, res: express.Response) {
+  async updateProductsBatch(req: CustomRequest, res: express.Response) {
     try {
       const productsData = req.body
       const updatedProducts = await this.productService.updateProductsBatch(productsData)
@@ -84,7 +84,7 @@ export class ProductController {
     }
   }
 
-  async deleteProductsBatch(req: express.Request, res: express.Response) {
+  async deleteProductsBatch(req: CustomRequest, res: express.Response) {
     try {
       const productIds = req.body
       const deletedProductIds = await this.productService.deleteProductsBatch(productIds)

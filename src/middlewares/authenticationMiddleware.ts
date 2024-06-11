@@ -1,8 +1,9 @@
-import express from 'express'
+import express, { Request } from 'express'
 import { get } from 'lodash'
 import jwt from 'jsonwebtoken'
 import { JWT_SECRET } from '../congif'
 import { AuthenticationService } from '../services/authenticationService'
+import { CustomRequest } from '../dto/Request'
 
 export class AuthenticationMiddleware {
   private authService: AuthenticationService
@@ -13,7 +14,7 @@ export class AuthenticationMiddleware {
     this.isOwner = this.isOwner.bind(this)
   }
 
-  public async verify(req: express.Request, res: express.Response, next: express.NextFunction) {
+  public async verify(req: CustomRequest, res: express.Response, next: express.NextFunction) {
     const tokenHeader = req.headers['x-access-token'] || req.headers['authorization']
     const token = this.authService.extractTokenFromHeader(tokenHeader)
 
@@ -21,16 +22,17 @@ export class AuthenticationMiddleware {
       return res.status(401).json({ status: false, errors: ['No autorizado'] })
     }
 
-    jwt.verify(token, JWT_SECRET, (error) => {
+    jwt.verify(token, JWT_SECRET, (error, decoded) => {
       if (error) {
         return res.status(401).json({ status: false, errors: ['Invalid Token'] })
       } else {
+        req.user = decoded
         next()
       }
     })
   }
 
-  public async isOwner(req: express.Request, res: express.Response, next: express.NextFunction) {
+  public async isOwner(req: CustomRequest, res: express.Response, next: express.NextFunction) {
     try {
       const { id } = req.params
       const currentUserId = get(req, 'identity._id') as string

@@ -1,6 +1,7 @@
 import express from 'express'
 import { AuthenticationService } from '../services/authenticationService'
 import { LoggedUserDto, UserDto } from '../dto/UserDto'
+import { CustomRequest } from '../dto/Request'
 
 export class AuthenticationController {
   private authService: AuthenticationService
@@ -11,7 +12,7 @@ export class AuthenticationController {
     this.register = this.register.bind(this)
   }
 
-  async login(req: express.Request, res: express.Response) {
+  async login(req: CustomRequest, res: express.Response) {
     const { email, password } = req.body
 
     if (!this.authService.validateLoginRequest(email, password)) {
@@ -30,7 +31,7 @@ export class AuthenticationController {
     }
   }
 
-  async register(req: express.Request, res: express.Response) {
+  async register(req: CustomRequest, res: express.Response) {
     const { email, password, username } = req.body
 
     try {

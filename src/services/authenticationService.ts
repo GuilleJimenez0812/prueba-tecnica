@@ -13,8 +13,8 @@ export class AuthenticationService {
   }
 
   async login(email: string, password: string): Promise<LoggedUserDto> {
-    if (typeof email !== 'string') throw new CustomError('The email does not match the format.', 401)
-    if (typeof password !== 'string') throw new CustomError('The password does not match the format.', 401)
+    if (typeof email !== 'string') throw new CustomError('The email does not match the format.', 400)
+    if (typeof password !== 'string') throw new CustomError('The password does not match the format.', 400)
 
     const user: UserDto = await this.userService.findUserByEmail(email)
 
