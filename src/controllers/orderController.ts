@@ -43,8 +43,10 @@ export class OrderController {
 
   async getOrdersByUser(req: CustomRequest, res: express.Response) {
     try {
+      const page = parseInt(req.query.page as string) || 1
+      const limit = parseInt(req.query.limit as string) || 10
       const user_id  = req.user.id
-      const orders = await this.orderService.getOrdersByUser(user_id)
+      const orders = await this.orderService.getOrdersByUser(user_id, page, limit)
       return res.status(200).json(orders)
     } catch (err) {
       return res.status(500).json({ error: 'Failed to get orders by user' })

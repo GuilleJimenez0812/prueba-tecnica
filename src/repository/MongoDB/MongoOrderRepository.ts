@@ -8,21 +8,29 @@ export class MongoOrderRepository implements IOrderRepository {
       product_id,
       user_id,
       quantity,
-      status: 'validating order'
+      status: 'validating order',
     })
     return newOrder.save().then((order) => order.toObject())
   }
 
-  async getOrders(): Promise<OrderDto[]> {
-    return OrderModel.find().then((orders) => orders.map((order) => order.toObject()))
+  async getOrders(page: number = 1, limit: number = 10): Promise<OrderDto[]> {
+    const skip = (page - 1) * limit
+    return OrderModel.find()
+      .skip(skip)
+      .limit(limit)
+      .then((orders) => orders.map((order) => order.toObject()))
   }
 
   async getOrderById(order_id: string): Promise<OrderDto> {
     return OrderModel.findById(order_id).then((order) => order?.toObject())
   }
 
-  async getOrdersByUser(user_id: string): Promise<OrderDto[]> {
-    return OrderModel.find({ user_id }).then((orders) => orders.map((order) => order.toObject()))
+  async getOrdersByUser(user_id: string, page: number = 1, limit: number = 10): Promise<OrderDto[]> {
+    const skip = (page - 1) * limit
+    return OrderModel.find({ user_id })
+      .skip(skip)
+      .limit(limit)
+      .then((orders) => orders.map((order) => order.toObject()))
   }
 
   async updateOrderStatus(order_id: string, status: string): Promise<OrderDto> {

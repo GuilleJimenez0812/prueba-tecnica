@@ -52,8 +52,8 @@ export class OrderService {
     return this.orderRepository.getOrderById(order_id)
   }
 
-  async getOrdersByUser(user_id: string): Promise<OrderDto[]> {
-    return this.orderRepository.getOrdersByUser(user_id)
+  async getOrdersByUser(user_id: string, page?: number, limit?: number): Promise<OrderDto[]> {
+    return this.orderRepository.getOrdersByUser(user_id, page, limit)
   }
 
   async updateOrderStatus(order_id: string, user_id: string): Promise<OrderDto> {
@@ -68,8 +68,8 @@ export class OrderService {
 
   private async verifyOrderOwnership(order: OrderDto, user_id: string): Promise<void> {
     if (!order) throw new CustomError('Invalid order', 400)
-    if (order.user_id !== user_id) {
-      throw new CustomError('Invalid order', 400)
+    if (order.user_id.toString() !== user_id) {
+      throw new CustomError('Invalid order.', 400)
     }
   }
 
