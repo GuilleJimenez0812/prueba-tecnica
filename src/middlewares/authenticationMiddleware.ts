@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import { JWT_SECRET } from '../congif'
 import { AuthenticationService } from '../services/authenticationService'
 import { CustomRequest } from '../dto/Request'
+import z from 'zod'
 
 export class AuthenticationMiddleware {
   constructor(private authService: AuthenticationService = new AuthenticationService()) {
@@ -46,6 +47,17 @@ export class AuthenticationMiddleware {
     } catch (err) {
       console.log(err)
       return res.sendStatus(400)
+    }
+  }
+
+  validate(schema: z.ZodSchema) {
+    return (req: CustomRequest, res: express.Response, next: express.NextFunction) => {
+      try {
+        schema.parse(req.body)
+        next()
+      } catch (error) {
+        return res.status(400).json({ error: error.errors })
+      }
     }
   }
 }
