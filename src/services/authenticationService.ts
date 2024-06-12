@@ -19,7 +19,7 @@ export class AuthenticationService {
   async login(email: string, password: string): Promise<LoggedUserDto> {
     this.verificationUtils.validateParameters({ email, password }, { email: 'string', password: 'string' })
 
-    const user: UserDto = await this.userService.findUserByEmail(email)
+    const user: UserDto = await this.userService.findUserByEmailWithPassword(email)
 
     if (!user || !(await bcryptjs.compare(password, user.password))) {
       throw new CustomError('Invalid email or password.', 401)

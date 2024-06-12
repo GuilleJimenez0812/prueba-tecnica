@@ -3,10 +3,10 @@ import { IOrderRepository } from '../Interfaces/IOrderRepository'
 import { OrderDto } from '../../dto/OrderDto'
 
 export class MongoOrderRepository implements IOrderRepository {
-  async createOrder(product_id: string[], user_id: string, quantity: number[]): Promise<OrderDto> {
+  async createOrder(products: string[], user: string, quantity: number[]): Promise<OrderDto> {
     const newOrder = new OrderModel({
-      product_id,
-      user_id,
+      products,
+      user,
       quantity,
       status: 'validating order',
       issueDate: new Date(),
@@ -19,25 +19,25 @@ export class MongoOrderRepository implements IOrderRepository {
     return OrderModel.find()
       .skip(skip)
       .limit(limit)
-      .populate('user_id')
-      .populate('product_id')
+      .populate('user')
+      .populate('products')
       .then((orders) => orders.map((order) => order.toObject()))
   }
 
   async getOrderById(order_id: string): Promise<OrderDto> {
     return OrderModel.findById(order_id)
-      .populate('user_id')
-      .populate('product_id')
+      .populate('user')
+      .populate('products')
       .then((order) => order?.toObject())
   }
 
-  async getOrdersByUser(user_id: string, page: number = 1, limit: number = 10): Promise<OrderDto[]> {
+  async getOrdersByUser(user: string, page: number = 1, limit: number = 10): Promise<OrderDto[]> {
     const skip = (page - 1) * limit
-    return OrderModel.find({ user_id })
+    return OrderModel.find({ user })
       .skip(skip)
       .limit(limit)
-      .populate('user_id')
-      .populate('product_id')
+      .populate('user')
+      .populate('products')
       .then((orders) => orders.map((order) => order.toObject()))
   }
   async updateOrderStatus(order_id: string, status: string, end_date?: Date): Promise<OrderDto> {

@@ -25,6 +25,15 @@ export class MongoUserRepository implements IUserRepository {
     return UserModel.findOne({ email }).then((user) => user?.toObject())
   }
 
+  async getUserByEmailWithPassword(email: string): Promise<UserDto | null> {
+    return UserModel.findOne({ email })
+      .select('+password')
+      .then((user) => {
+        if (!user) return null
+        return user.toObject()
+      })
+  }
+
   async getUserById(id: string): Promise<UserDto | null> {
     return UserModel.findById(id).then((user) => user?.toObject())
   }

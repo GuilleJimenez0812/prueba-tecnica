@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 // Esquema para la creación de un pedido
 const createOrderSchema = z.object({
-  product_id: z.array(z.string()).min(1, 'Al menos un producto es requerido'),
+  products: z.array(z.string()).min(1, 'Al menos un producto es requerido'),
   quantity: z.array(z.number().int().positive('La cantidad debe ser un número entero positivo')).min(1, 'Al menos una cantidad es requerida'),
 })
 

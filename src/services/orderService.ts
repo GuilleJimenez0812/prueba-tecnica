@@ -4,6 +4,7 @@ import { IOrderRepository } from '../repository/Interfaces/IOrderRepository'
 import { CustomError } from '../dto/customError'
 import { ProductService } from './productService'
 import { VerificationUtils } from '../utils/verificationUtils'
+import { ProductDto } from '../dto/ProductDto'
 
 export class OrderService {
   private orderStatuses: Array<'validating order' | 'order sent' | 'order received' | 'canceled'> = [
@@ -22,10 +23,9 @@ export class OrderService {
     this.productService = productService
   }
 
-  async createOrder(product_id: string[], user_id: string, quantity: number[]): Promise<OrderDto> {
-    this.validateOrderParameters(product_id, user_id, quantity)
-    await this.verifyProductAvailability(product_id, quantity)
-    return this.persistOrder(product_id, user_id, quantity)
+  async createOrder(products: string[], user_id: string, quantity: number[]): Promise<OrderDto> {
+    await this.verifyProductAvailability(products, quantity)
+    return this.persistOrder(products, user_id, quantity)
   }
 
   private validateOrderParameters(product_id: string[], user_id: string, quantity: number[]): void {
@@ -35,17 +35,21 @@ export class OrderService {
     }
   }
 
-  private async verifyProductAvailability(product_id: string[], quantity: number[]): Promise<void> {
+  private async verifyProductAvailability(product: string[], quantity: number[]): Promise<void> {
     for (let i = 0; i < quantity.length; i++) {
-      const isAvailable = await this.productService.checkAvailability(product_id[i], quantity[i])
+      const isAvailable = await this.productService.checkAvailability(product[i], quantity[i])
       if (!isAvailable) {
-        throw new CustomError('The product is not available', 400)
+        const productUnaveilable: ProductDto = await this.productService.obtainProductById(product[i])
+        throw new CustomError(
+          `The product ${productUnaveilable.product_name} is currently available with only ${productUnaveilable.availability} in stock, and the requested order quantity is ${quantity[i]}`,
+          400,
+        )
       }
     }
   }
 
-  private async persistOrder(product_id: string[], user_id: string, quantity: number[]): Promise<OrderDto> {
-    return this.orderRepository.createOrder(product_id, user_id, quantity)
+  private async persistOrder(product: string[], user_id: string, quantity: number[]): Promise<OrderDto> {
+    return this.orderRepository.createOrder(product, user_id, quantity)
   }
 
   async getOrderById(order_id: string): Promise<OrderDto> {
@@ -70,7 +74,7 @@ export class OrderService {
 
   private async verifyOrderOwnership(order: OrderDto, user_id: string): Promise<void> {
     if (!order) throw new CustomError('Invalid order', 400)
-    if (order.user.toString() !== user_id) {
+    if (order.user._id.toString() !== user_id) {
       throw new CustomError('Invalid order.', 400)
     }
   }

@@ -4,14 +4,19 @@ import { UserDto } from '../dto/UserDto'
 import { CustomRequest } from '../dto/Request'
 
 export class UserController {
-  private userService: UserService
-  constructor() {
-    this.userService = new UserService()
+  constructor(private userService: UserService = new UserService()) {
+    this.userService = userService
     this.getAllUsers = this.getAllUsers.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
     this.updateUser = this.updateUser.bind(this)
   }
 
+  /**
+   * Controller that retrieves a list of all users in the system.
+   * @param req The request object. It may contain query parameters to filter or sort the user list.
+   * @param res The response object. Used to send the retrieved list of users back to the client.
+   * @returns void
+   */
   async getAllUsers(req: CustomRequest, res: express.Response) {
     try {
       const page = parseInt(req.query.page as string) || 1
@@ -24,6 +29,12 @@ export class UserController {
     }
   }
 
+  /**
+   * Deletes a user from the system based on the provided user ID.
+   * @param req The request object, containing the user ID in the route parameters.
+   * @param res The response object, used to send back the result of the delete operation.
+   * @returns void
+   */
   async deleteUser(req: CustomRequest, res: express.Response) {
     try {
       const { id } = req.params
@@ -38,6 +49,12 @@ export class UserController {
     }
   }
 
+  /**
+   * Updates the details of an existing user. The user ID is provided in the route parameters.
+   * @param req The request object, containing the user ID in the route parameters and the update values in the body.
+   * @param res The response object, used to send back the updated user details or an error message.
+   * @returns void
+   */
   async updateUser(req: CustomRequest, res: express.Response) {
     try {
       const { id } = req.params

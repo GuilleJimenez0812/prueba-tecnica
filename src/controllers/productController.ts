@@ -15,6 +15,11 @@ export class ProductController {
     this.getProducts = this.getProducts.bind(this)
   }
 
+  /**
+   * Retrieves all products.
+   * @param req The request object.
+   * @param res The response object.
+   */
   async getProducts(req: CustomRequest, res: express.Response) {
     try {
       const page = parseInt(req.query.page as string) || 1
@@ -26,6 +31,11 @@ export class ProductController {
     }
   }
 
+  /**
+   * Fetches products by their availability.
+   * @param req The request object, containing availability filter. It may contain query parameters to filter or sort the user list.
+   * @param res The response object.
+   */
   async getProductsByAvailability(req: CustomRequest, res: express.Response) {
     try {
       const page = parseInt(req.query.page as string) || 1
@@ -37,6 +47,11 @@ export class ProductController {
     }
   }
 
+  /**
+   * Creates a new product.
+   * @param req The request object, containing product details (product_name, description, price, availability).
+   * @param res The response object.
+   */
   async createProduct(req: CustomRequest, res: express.Response) {
     try {
       const productData = req.body
@@ -50,6 +65,11 @@ export class ProductController {
     }
   }
 
+  /**
+   * Deletes a product by its ID.
+   * @param req The request object, containing the product ID in the params.
+   * @param res The response object.
+   */
   async deleteProductById(req: CustomRequest, res: express.Response) {
     try {
       const { id } = req.params
@@ -63,6 +83,13 @@ export class ProductController {
     }
   }
 
+  /**
+   * Updates a product by its ID.
+   * @param req The request object, containing the product ID in the params and
+   * update data in the body (product_name, description, price, availability).
+   * It may contain query parameters to filter or sort the user list.
+   * @param res The response object.
+   */
   async updateProductById(req: CustomRequest, res: express.Response) {
     try {
       const { id } = req.params
@@ -77,6 +104,11 @@ export class ProductController {
     }
   }
 
+  /**
+   * Creates multiple products in a batch.
+   * @param req The request object, containing an array of product details [(product_name, description, price, availability)].
+   * @param res The response object.
+   */
   async createProductsBatch(req: CustomRequest, res: express.Response) {
     try {
       const productsData = req.body
@@ -87,6 +119,11 @@ export class ProductController {
     }
   }
 
+  /**
+   * Updates multiple products in a batch.
+   * @param req The request object, containing an array of product updates [(product_name, description, price, availability)].
+   * @param res The response object.
+   */
   async updateProductsBatch(req: CustomRequest, res: express.Response) {
     try {
       const productsData = req.body
@@ -97,6 +134,11 @@ export class ProductController {
     }
   }
 
+  /**
+   * Deletes multiple products in a batch.
+   * @param req The request object, containing an array of product IDs.
+   * @param res The response object.
+   */
   async deleteProductsBatch(req: CustomRequest, res: express.Response) {
     try {
       const productIds = req.body

@@ -16,9 +16,9 @@ export class OrderController {
 
   async createOrder(req: CustomRequest, res: express.Response) {
     try {
-      const { product_id, quantity } = req.body
+      const { products, quantity } = req.body
       const user_id = req.user.id
-      const order = await this.orderService.createOrder(product_id, user_id, quantity)
+      const order = await this.orderService.createOrder(products, user_id, quantity)
       return res.status(201).json(order)
     } catch (err) {
       const statusCode = err.statusCode || 500

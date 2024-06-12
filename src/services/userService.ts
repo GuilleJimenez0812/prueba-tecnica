@@ -21,6 +21,10 @@ export class UserService {
     return await this.userRepository.getUserByEmail(email)
   }
 
+  async findUserByEmailWithPassword(email: string): Promise<UserDto> {
+    return await this.userRepository.getUserByEmailWithPassword(email)
+  }
+
   async findUserById(id: string): Promise<UserDto> {
     return await this.userRepository.getUserById(id)
   }
