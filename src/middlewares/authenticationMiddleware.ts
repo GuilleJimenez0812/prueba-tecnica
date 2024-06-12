@@ -6,10 +6,8 @@ import { AuthenticationService } from '../services/authenticationService'
 import { CustomRequest } from '../dto/Request'
 
 export class AuthenticationMiddleware {
-  private authService: AuthenticationService
-
-  constructor() {
-    this.authService = new AuthenticationService()
+  constructor(private authService: AuthenticationService = new AuthenticationService()) {
+    this.authService = authService
     this.verify = this.verify.bind(this)
     this.isOwner = this.isOwner.bind(this)
   }
@@ -34,9 +32,8 @@ export class AuthenticationMiddleware {
 
   public async isOwner(req: CustomRequest, res: express.Response, next: express.NextFunction) {
     try {
-      const { id } = req.params 
+      const { id } = req.params
       const currentUserId = req.user.id
-      
 
       if (!currentUserId) {
         return res.sendStatus(403)

@@ -13,13 +13,15 @@ export class AuthenticationController {
   }
 
   async login(req: CustomRequest, res: express.Response) {
-    const { email, password } = req.body
-
-    if (!this.authService.validateLoginRequest(email, password)) {
-      return res.status(400).json({ error: 'Email and password are required.' })
-    }
+    const email = req.body.email
+    const password = req.body.password
 
     try {
+      this.authService.validateParams({ email: email, password: password })
+
+      if (!this.authService.validateLoginRequest(email, password)) {
+        return res.status(400).json({ error: 'Email and password are required.' })
+      }
       const loggedUser: LoggedUserDto = await this.authService.login(email, password)
 
       return res.status(200).json({ status: true, data: loggedUser, message: 'Login Successful' })
@@ -35,6 +37,7 @@ export class AuthenticationController {
     const { email, password, username } = req.body
 
     try {
+      this.authService.validateParams({email: email, password: password, username: username})
       const user: UserDto = await this.authService.register(email, password, username)
       return res.status(200).json({ status: true, data: user, message: 'User created successfully' })
     } catch (err) {

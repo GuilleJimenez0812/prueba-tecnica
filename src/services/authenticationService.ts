@@ -11,7 +11,7 @@ export class AuthenticationService {
   constructor(
     private userService: UserService = new UserService(),
     private userUtils: UsersUtils = new UsersUtils(),
-    private verificationUtils: VerificationUtils = new VerificationUtils()
+    private verificationUtils: VerificationUtils = new VerificationUtils(),
   ) {
     this.userService = userService
   }
@@ -67,5 +67,24 @@ export class AuthenticationService {
 
   validateRegisterRequest(email: string, password: string, username: string): boolean {
     return email.length > 0 && password.length > 0 && username.length > 0
+  }
+
+  loginParamsExists(email: string, password: string) {
+    if (!email) throw new CustomError('You need to privide a email', 400)
+    if (!password) throw new CustomError('You need to privide a password', 400)
+  }
+
+  registerParamsExists(email: string, password: string, username: string) {
+    if (!email) throw new CustomError('You need to privide a email', 400)
+    if (!password) throw new CustomError('You need to privide a password', 400)
+    if (!username) throw new CustomError('You need to privide a username', 400)
+  }
+
+  validateParams(params: Record<string, any>) {
+    for (const [key, value] of Object.entries(params)) {
+      if (!value) {
+        throw new CustomError(`You need to provide a ${key}`, 400)
+      }
+    }
   }
 }
