@@ -19,11 +19,16 @@ export class MongoOrderRepository implements IOrderRepository {
     return OrderModel.find()
       .skip(skip)
       .limit(limit)
+      .populate('user_id')
+      .populate('product_id')
       .then((orders) => orders.map((order) => order.toObject()))
   }
 
   async getOrderById(order_id: string): Promise<OrderDto> {
-    return OrderModel.findById(order_id).then((order) => order?.toObject())
+    return OrderModel.findById(order_id)
+      .populate('user_id')
+      .populate('product_id')
+      .then((order) => order?.toObject())
   }
 
   async getOrdersByUser(user_id: string, page: number = 1, limit: number = 10): Promise<OrderDto[]> {
@@ -31,9 +36,10 @@ export class MongoOrderRepository implements IOrderRepository {
     return OrderModel.find({ user_id })
       .skip(skip)
       .limit(limit)
+      .populate('user_id')
+      .populate('product_id')
       .then((orders) => orders.map((order) => order.toObject()))
   }
-
   async updateOrderStatus(order_id: string, status: string, end_date?: Date): Promise<OrderDto> {
     const updateObject: { status: string; end_date?: Date } = { status }
 

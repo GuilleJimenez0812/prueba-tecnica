@@ -70,7 +70,7 @@ export class OrderService {
 
   private async verifyOrderOwnership(order: OrderDto, user_id: string): Promise<void> {
     if (!order) throw new CustomError('Invalid order', 400)
-    if (order.user_id.toString() !== user_id) {
+    if (order.user.toString() !== user_id) {
       throw new CustomError('Invalid order.', 400)
     }
   }
@@ -98,8 +98,8 @@ export class OrderService {
 
     if (this.verifyOrderStatus(currentOrder)) throw new CustomError('The order is alredy completed', 400)
 
-    currentOrder.product_id.forEach(async (id, index) => {
-      await this.productService.restoreAvailability(id, currentOrder.quantity[index])
+    currentOrder.products.forEach(async (product, index) => {
+      await this.productService.restoreAvailability(product, currentOrder.quantity[index])
     })
 
     const endDate = this.assignOrderEndDate('canceled')

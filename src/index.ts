@@ -1,11 +1,11 @@
 import express from 'express'
 import http from 'http'
-import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import compression from 'compression'
 import cors from 'cors'
-import mongoose, { mongo } from 'mongoose'
+import mongoose from 'mongoose'
 import router from './router/indexRouter'
+import { MONGO_URL, PORT } from './congif'
 
 const app = express()
 
@@ -19,11 +19,9 @@ app.use(express.json())
 
 const server = http.createServer(app)
 
-server.listen(8080, () => {
-    console.log('Server running on http://localhost:8080')
-})
-
-const MONGO_URL = 'mongodb+srv://gjimenez:ND2jjj3jKHb5v4pJ@cluster0.d9knt2l.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+server.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`)
+}) 
 
 mongoose.Promise = Promise
 mongoose.connect(MONGO_URL)

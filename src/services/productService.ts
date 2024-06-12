@@ -92,8 +92,7 @@ export class ProductService {
     await this.updateProductById(product._id, product)
   }
 
-  async restoreAvailability(product_id: string, order_quantity: number) {
-    const product: ProductDto = await this.obtainProductById(product_id)
+  async restoreAvailability(product: ProductDto, order_quantity: number) {
 
     product.availability += order_quantity
     await this.updateProductById(product._id, product)
