@@ -1,7 +1,7 @@
 
 # Prueba técnica Guillermo Jiménez
 
-El presente repositorio corresponde a la prueba técnica realizada por mi persona (Guillermo Jiménez), el cual cuenta con un login de usuario, la posibilidad de manejar un inventario de productos y ordenes de compra.
+Este repositorio alberga la prueba técnica desarrollada por Guillermo Jiménez. Incluye funcionalidades clave como un sistema de autenticación de usuarios, gestión de inventario de productos y procesamiento de órdenes de compra.
 
 
 ## Tabla de contenido
