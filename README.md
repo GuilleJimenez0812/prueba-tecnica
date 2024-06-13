@@ -129,6 +129,14 @@ Para la correcta ejecución de este proyecto se utilizaron varias librerias clav
     - Manejar relaciones entre documentos con población de referencias.
 
 - **zod (^3.23.8):** librería para la validación de datos, utilizada para validar y analizar datos de entrada, asegurando que cumplan con los esquemas definidos antes de su procesamiento o almacenamiento.
+
+- **vitest (^1.6.0):** Vitest es un marco de pruebas que se utiliza en este proyecto para propósitos de pruebas unitarias y de integración.
+  Ofrece una manera simple e intuitiva de escribir pruebas y afirmar el comportamiento esperado del código.
+
+  Al utilizar Vitest, se puede asegurar que el código tiene el comportamiento esperado y que cualquier cambio o actualización que realicen no introduzca errores o regresiones. Permite la automatización de las pruebas, facilitando su ejecución repetida y la detección temprana de problemas en el proceso de desarrollo.
+
+  Vitest también se integra bien con TypeScript, proporcionando capacidades de comprobación de tipos y análisis estático que ayudan a identificar posibles errores antes de ejecutar las pruebas.
+
 ## Rutas de la API
 
 ### Autenticación
