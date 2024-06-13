@@ -87,9 +87,9 @@ Las ventajas de usar TypeScript sobre JavaScript incluyen<a href="#ref2">[2]</a>
 - **Ecosistema Robusto**: TypeScript tiene una comunidad activa y un ecosistema en crecimiento, con muchas definiciones de tipos disponibles para librerías de JavaScript populares.
 
 ## MongoDB
-MongoDB es una base de datos NoSQL orientada a documentos que ofrece una gran flexibilidad y escalabilidad, especialmente útil para proyectos que manejan un gran volumen de datos. A diferencia de las bases de datos relacionales, que almacenan datos en tablas y filas, MongoDB utiliza un modelo basado en documentos JSON-like, lo que permite una estructura de datos más dinámica y un esquema flexible<a href="#ref2">[3]</a>.
+MongoDB es una base de datos NoSQL orientada a documentos que ofrece una gran flexibilidad y escalabilidad, especialmente útil para proyectos que manejan un gran volumen de datos. A diferencia de las bases de datos relacionales, que almacenan datos en tablas y filas, MongoDB utiliza un modelo basado en documentos JSON-like, lo que permite una estructura de datos más dinámica y un esquema flexible<a href="#ref3">[3]</a>.
 
-Las ventajas de usar MongoDB sobre una base de datos relacional incluyen<a href="#ref2">[4]</a>:
+Las ventajas de usar MongoDB sobre una base de datos relacional incluyen<a href="#ref4">[4]</a>:
 
 - **Esquemas Flexibles**: MongoDB no requiere un esquema fijo, lo que significa que los documentos dentro de una misma colección pueden tener diferentes campos. Esto es ideal para datos que pueden variar o que son incompletos.
 - **Escalabilidad Horizontal**: MongoDB está diseñado para escalar fácilmente de manera horizontal a través del sharding, distribuyendo los datos a través de múltiples servidores para manejar grandes volúmenes de datos y tráfico.
@@ -491,6 +491,6 @@ Un ODM está diseñado específicamente para mapear objetos a documentos en base
 
 <a href="#ref2"></a>[2] “Typescript vs JavaScript: Which one you should use, and why,” SitePoint, https://www.sitepoint.com/typescript-vs-javascript/ (accessed Jun. 13, 2024). 
 
-<a href="#ref2"></a>[3] “Advantages of mongodb,” MongoDB, https://www.mongodb.com/resources/compare/advantages-of-mongodb (accessed Jun. 13, 2024). 
+<a href="#ref3"></a>[3] “Advantages of mongodb,” MongoDB, https://www.mongodb.com/resources/compare/advantages-of-mongodb (accessed Jun. 13, 2024). 
 
-<a href="#ref2"></a>[4] Waleed, “MongoDB vs SQL databases: A comprehensive comparison,” RedSwitches, https://www.redswitches.com/blog/mongodb-vs-sql/ (accessed Jun. 13, 2024). 
+<a href="#ref4"></a>[4] Waleed, “MongoDB vs SQL databases: A comprehensive comparison,” RedSwitches, https://www.redswitches.com/blog/mongodb-vs-sql/ (accessed Jun. 13, 2024). 
