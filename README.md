@@ -76,8 +76,8 @@ La arquitectura de este proyecto está diseñada para encapsular eficientemente 
 
 Gracias a la inyección de dependencia, los servicios operan independientemente del gestor de base de datos específico, confiando en la estructura proporcionada por los DTOs definidos. Esto facilita cambios significativos, como la sustitución de la base de datos o del ORM, sin afectar los servicios, controladores y DTOs existentes, asegurando así una mayor flexibilidad y mantenibilidad del sistema.
 
-## TypeScript
-Las ventajas de usar TypeScript sobre JavaScript incluyen<a href="#ref2">[2]</a>:
+## TypeScript vs JavaScript
+Se tomo la decisción de usar TypeScript sobre JavaScript debido a los siguientes motivos:<a href="#ref2">[2]</a>:
 
 - **Chequeo de Tipos Estáticos**: TypeScript permite especificar tipos de datos para variables, parámetros y valores de retorno, lo que ayuda a prevenir errores en tiempo de ejecución y facilita la depuración del código.
 - Soporte Mejorado en IDEs: Los entornos de desarrollo integrados ofrecen un mejor soporte para TypeScript, con funcionalidades como autocompletado de código y sugerencias dinámicas.

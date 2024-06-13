@@ -146,7 +146,7 @@ export class OrderService {
     this.verifyOrderOwnership(currentOrder, user_id)
 
     //The order can´t change status if is 'order received'.
-    if (this.verifyOrderStatus(currentOrder)) throw new CustomError('The order is alredy completed', 400)
+    if (this.verifyOrderStatusIsOrderReceived(currentOrder)) throw new CustomError('The order is alredy completed', 400)
 
     currentOrder.products.forEach(async (product, index) => {
       await this.productService.restoreAvailability(product, currentOrder.quantity[index])
@@ -163,7 +163,7 @@ export class OrderService {
    * @param order The `OrderDto` object representing the order to check.
    * @returns A boolean indicating whether the order's status is 'order received'.
    */
-  private verifyOrderStatus(order: OrderDto): boolean {
+  verifyOrderStatusIsOrderReceived(order: OrderDto): boolean {
     return order.status === 'order received'
   }
 
