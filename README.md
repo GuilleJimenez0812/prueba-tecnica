@@ -32,6 +32,7 @@ El presente repositorio corresponde a la prueba técnica realizada por mi person
 
 Es importante destacar que las ordenes de compra **no** pueden ser modificadas en contenido ni eliminadas del sistema, ya que es importante mantener un registro de estas acciones a lo largo del tiempo. Al momento de actualizar la orden se cambiara automaticamente al siguiente estado correspondiente del proceso, asi mismo una orden que se encuentra en el estado 'orden recibida' no puede ser cancelada.
 
+Adicionalmente para probar estas funcionalidades se utlizo el marco de pruebas Vitest con la finalidad de hacer pruebas unitarias del código y comprobar que tienen el comportamiento esperado.
 
 ## Instalación del proyecto
 
