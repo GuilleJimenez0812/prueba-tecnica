@@ -7,7 +7,7 @@
     "dev": "nodemon",
     "test": "vitest",
     "build": "tsc",
-    "start": "ts-node-dev app.ts"
+    "start": "node src/index.js"
   },
   "keywords": [],
   "author": "",
