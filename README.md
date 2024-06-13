@@ -23,8 +23,7 @@ Este repositorio alberga la prueba técnica desarrollada por Guillermo Jiménez.
 ## Funcionalidades
 
 - Registro, login, modificación, eliminación y lista de usuarios.
-- Creación, modificación, actualización y eliminación de productos.
-- Creación, modificación, actualización y eliminación de listas de productos.
+- Creación, modificación, actualización y eliminación de productos y listas de productos.
 - Creación de ordenes de compra.
 - Cambiar estado de la orden de compra.
 - Cancelar orden de compra.
@@ -71,32 +70,33 @@ Para facilitar esta abstracción, se ha establecido una estructura de carpetas o
 
 ### ¿Por qué esta arquitectura?
 
-La arquitectura hexagonal y el Domain-Driven Design (DDD) se complementan de manera efectiva. DDD proporciona un marco detallado para modelar con precisión el núcleo del dominio empresarial, mientras que la arquitectura hexagonal ofrece una metodología para implementar esa lógica de dominio de manera que sea flexible y mantenga un bajo acoplamiento entre componentes[1].
+La arquitectura hexagonal y el Domain-Driven Design (DDD) se complementan de manera efectiva. DDD proporciona un marco detallado para modelar con precisión el núcleo del dominio empresarial, mientras que la arquitectura hexagonal ofrece una metodología para implementar esa lógica de dominio de manera que sea flexible y mantenga un bajo acoplamiento entre componentes[^1].
 
 La arquitectura de este proyecto está diseñada para encapsular eficientemente las capas de aplicación, permitiendo modificaciones significativas sin requerir una reescritura del código. Tomemos, por ejemplo, los repositorios y servicios: los servicios utilizan la inyección de dependencia para interactuar con la interfaz del repositorio, que especifica los métodos y sus retornos. La implementación concreta de estos métodos, como se ve en MongoUserRepository.ts, cumple con la interfaz.
 
 Gracias a la inyección de dependencia, los servicios operan independientemente del gestor de base de datos específico, confiando en la estructura proporcionada por los DTOs definidos. Esto facilita cambios significativos, como la sustitución de la base de datos o del ORM, sin afectar los servicios, controladores y DTOs existentes, asegurando así una mayor flexibilidad y mantenibilidad del sistema.
 
 ## TypeScript
-Las ventajas de usar TypeScript sobre JavaScript incluyen[2]:
+Las ventajas de usar TypeScript sobre JavaScript incluyen[^2]:
 
-- Chequeo de Tipos Estáticos: TypeScript permite especificar tipos de datos para variables, parámetros y valores de retorno, lo que ayuda a prevenir errores en tiempo de ejecución y facilita la depuración del código.
+- **Chequeo de Tipos Estáticos**: TypeScript permite especificar tipos de datos para variables, parámetros y valores de retorno, lo que ayuda a prevenir errores en tiempo de ejecución y facilita la depuración del código.
 - Soporte Mejorado en IDEs: Los entornos de desarrollo integrados ofrecen un mejor soporte para TypeScript, con funcionalidades como autocompletado de código y sugerencias dinámicas.
-- Características Avanzadas de OOP: TypeScript añade características de programación orientada a objetos como clases, interfaces y módulos, que son familiares para desarrolladores con experiencia en otros lenguajes como C# o Java.
-- Compatibilidad con Características Futuras de ECMAScript: TypeScript se actualiza constantemente para incluir las últimas características de ECMAScript, permitiendo a los desarrolladores utilizar nuevas funcionalidades del lenguaje antes de que estén ampliamente disponibles.
-- Mantenibilidad y Escalabilidad: El tipado estático y la estructura clara del código hacen que TypeScript sea más fácil de mantener y escalar, especialmente en proyectos grandes.
-- Ecosistema Robusto: TypeScript tiene una comunidad activa y un ecosistema en crecimiento, con muchas definiciones de tipos disponibles para librerías de JavaScript populares.
+- **Características Avanzadas de OOP**: TypeScript añade características de programación orientada a objetos como clases, interfaces y módulos, que son familiares para desarrolladores con experiencia en otros lenguajes como C# o Java.
+- **Compatibilidad con Características Futuras de ECMAScript**: TypeScript se actualiza constantemente para incluir las últimas características de ECMAScript, permitiendo a los desarrolladores utilizar nuevas funcionalidades del lenguaje antes de que estén ampliamente disponibles.
+- **Mantenibilidad y Escalabilidad**: El tipado estático y la estructura clara del código hacen que TypeScript sea más fácil de mantener y escalar, especialmente en proyectos grandes.
+- **Ecosistema Robusto**: TypeScript tiene una comunidad activa y un ecosistema en crecimiento, con muchas definiciones de tipos disponibles para librerías de JavaScript populares.
 
 ## MongoDB
-MongoDB es una base de datos NoSQL orientada a documentos que ofrece una gran flexibilidad y escalabilidad, especialmente útil para proyectos que manejan un gran volumen de datos. A diferencia de las bases de datos relacionales, que almacenan datos en tablas y filas, MongoDB utiliza un modelo basado en documentos JSON-like, lo que permite una estructura de datos más dinámica y un esquema flexible[3].
+MongoDB es una base de datos NoSQL orientada a documentos que ofrece una gran flexibilidad y escalabilidad, especialmente útil para proyectos que manejan un gran volumen de datos. A diferencia de las bases de datos relacionales, que almacenan datos en tablas y filas, MongoDB utiliza un modelo basado en documentos JSON-like, lo que permite una estructura de datos más dinámica y un esquema flexible[^3].
 
-Las ventajas de usar MongoDB sobre una base de datos relacional incluyen[4]:
+Las ventajas de usar MongoDB sobre una base de datos relacional incluyen[^4]:
 
-- Esquemas Flexibles: MongoDB no requiere un esquema fijo, lo que significa que los documentos dentro de una misma colección pueden tener diferentes campos. Esto es ideal para datos que pueden variar o que son incompletos.
-- Escalabilidad Horizontal: MongoDB está diseñado para escalar fácilmente de manera horizontal a través del sharding, distribuyendo los datos a través de múltiples servidores para manejar grandes volúmenes de datos y tráfico.
-- Rendimiento: Ofrece un alto rendimiento para operaciones de lectura y escritura, y su estilo de computación en memoria para trabajar con datos reduce la necesidad de operaciones de join costosas, comunes en las bases de datos relacionales.
-- Desarrollo Ágil: Su modelo de datos se alinea bien con los objetos utilizados en la programación moderna, lo que simplifica el proceso de desarrollo y reduce la necesidad de mapeo de objetos complejos.
-- Manejo de Datos Desestructurados: Es ideal para almacenar datos desestructurados o semi-estructurados, lo que es común en aplicaciones modernas que recopilan una variedad de tipos de datos.
+- **Esquemas Flexibles**: MongoDB no requiere un esquema fijo, lo que significa que los documentos dentro de una misma colección pueden tener diferentes campos. Esto es ideal para datos que pueden variar o que son incompletos.
+- **Escalabilidad Horizontal**: MongoDB está diseñado para escalar fácilmente de manera horizontal a través del sharding, distribuyendo los datos a través de múltiples servidores para manejar grandes volúmenes de datos y tráfico.
+- **Rendimiento**: Ofrece un alto rendimiento para operaciones de lectura y escritura, y su estilo de computación en memoria para trabajar con datos reduce la necesidad de operaciones de join costosas, comunes en las bases de datos relacionales.
+- **Desarrollo Ágil**: Su modelo de datos se alinea bien con los objetos utilizados en la programación moderna, lo que simplifica el proceso de desarrollo y reduce la necesidad de mapeo de objetos complejos.
+- **Manejo de Datos Desestructurados**: Es ideal para almacenar datos desestructurados o semi-estructurados, lo que es común en aplicaciones modernas que recopilan una variedad de tipos de datos.
+
 ## Librerías Y Frameworks
 
 Para la correcta ejecución de este proyecto se utilizaron varias librerias claves. A continuación se cuenta con una breve descripción y la razón de su uso:
@@ -487,10 +487,10 @@ Un ODM está diseñado específicamente para mapear objetos a documentos en base
 
 
 ## Bibliografía
-[1] Yavé Guadaño Ibáñez                 Desde 2006, “Patrones de Arquitectura: Organización y Estructura de microservicios,” Paradigma, https://www.paradigmadigital.com/dev/patrones-arquitectura-organizacion-estructura-microservicios/#:~:text=La%20arquitectura%20hexagonal%20y%20DDD,un%20diseño%20flexible%20y%20desacoplado. (accessed Jun. 13, 2024). 
+[^1] Yavé Guadaño Ibáñez                 Desde 2006, “Patrones de Arquitectura: Organización y Estructura de microservicios,” Paradigma, https://www.paradigmadigital.com/dev/patrones-arquitectura-organizacion-estructura-microservicios/#:~:text=La%20arquitectura%20hexagonal%20y%20DDD,un%20diseño%20flexible%20y%20desacoplado. (accessed Jun. 13, 2024). 
 
-[2] “Typescript vs JavaScript: Which one you should use, and why,” SitePoint, https://www.sitepoint.com/typescript-vs-javascript/ (accessed Jun. 13, 2024). 
+[^2] “Typescript vs JavaScript: Which one you should use, and why,” SitePoint, https://www.sitepoint.com/typescript-vs-javascript/ (accessed Jun. 13, 2024). 
 
-[3] “Advantages of mongodb,” MongoDB, https://www.mongodb.com/resources/compare/advantages-of-mongodb (accessed Jun. 13, 2024). 
+[^3] “Advantages of mongodb,” MongoDB, https://www.mongodb.com/resources/compare/advantages-of-mongodb (accessed Jun. 13, 2024). 
 
-[4] Waleed, “MongoDB vs SQL databases: A comprehensive comparison,” RedSwitches, https://www.redswitches.com/blog/mongodb-vs-sql/ (accessed Jun. 13, 2024). 
+[^4] Waleed, “MongoDB vs SQL databases: A comprehensive comparison,” RedSwitches, https://www.redswitches.com/blog/mongodb-vs-sql/ (accessed Jun. 13, 2024). 
