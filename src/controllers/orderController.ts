@@ -3,10 +3,8 @@ import { OrderService } from '../services/orderService'
 import { CustomRequest } from '../dto/Request'
 
 export class OrderController {
-  private orderService: OrderService
-
-  constructor() {
-    this.orderService = new OrderService()
+  constructor(private orderService: OrderService = new OrderService()) {
+    this.orderService = orderService
     this.createOrder = this.createOrder.bind(this)
     this.getOrderById = this.getOrderById.bind(this)
     this.getOrdersByUser = this.getOrdersByUser.bind(this)
@@ -14,6 +12,12 @@ export class OrderController {
     this.cancelOrder = this.cancelOrder.bind(this)
   }
 
+  /**
+   * Creates a new order with the specified details.
+   * @param req The request object, containing the order details (products, quantity).
+   * @param res The response object.
+   * @returns
+   */
   async createOrder(req: CustomRequest, res: express.Response) {
     try {
       const { products, quantity } = req.body
@@ -28,6 +32,12 @@ export class OrderController {
     }
   }
 
+  /**
+   * Retrieves a specific order by its unique identifier.
+   * @param req the request object, containing the order id.
+   * @param res
+   * @returns
+   */
   async getOrderById(req: CustomRequest, res: express.Response) {
     try {
       const { id } = req.params
@@ -41,11 +51,17 @@ export class OrderController {
     }
   }
 
+  /**
+   * Fetches all orders associated with a given user.
+   * @param req the request object.
+   * @param res the response object.
+   * @returns
+   */
   async getOrdersByUser(req: CustomRequest, res: express.Response) {
     try {
       const page = parseInt(req.query.page as string) || 1
       const limit = parseInt(req.query.limit as string) || 10
-      const user_id  = req.user.id
+      const user_id = req.user.id
       const orders = await this.orderService.getOrdersByUser(user_id, page, limit)
       return res.status(200).json(orders)
     } catch (err) {
@@ -53,6 +69,12 @@ export class OrderController {
     }
   }
 
+  /**
+   * Updates the status of an existing order.
+   * @param req the request object, containing the order id.
+   * @param res the response object.
+   * @returns
+   */
   async updateOrderStatus(req: CustomRequest, res: express.Response) {
     try {
       const { id } = req.params
@@ -70,6 +92,12 @@ export class OrderController {
     }
   }
 
+  /**
+   * Cancels an existing order based on its unique identifier.
+   * @param req The request object, containing the order id.
+   * @param res The response object.
+   * @returns
+   */
   async cancelOrder(req: CustomRequest, res: express.Response) {
     try {
       const { order_id } = req.params

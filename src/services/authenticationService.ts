@@ -5,22 +5,26 @@ import { CustomError } from '../dto/customError'
 import { UserService } from './userService'
 import { LoggedUserDto, UserDto } from '../dto/UserDto'
 import { UsersUtils } from '../utils/usersUtils'
-import { VerificationUtils } from '../utils/verificationUtils'
 
 export class AuthenticationService {
   constructor(
     private userService: UserService = new UserService(),
     private userUtils: UsersUtils = new UsersUtils(),
-    private verificationUtils: VerificationUtils = new VerificationUtils(),
   ) {
     this.userService = userService
   }
 
+  /**
+   * Attempts to log in a user with the provided email and password.
+   * @param email The email address of the user attempting to log in.
+   * @param password The password of the user attempting to log in.
+   * @returns A promise that resolves with the LoggedUserDto object containing the user's information and token.
+   * @throws CustomError with status 401 if the email or password is invalid.
+   */
   async login(email: string, password: string): Promise<LoggedUserDto> {
-    this.verificationUtils.validateParameters({ email, password }, { email: 'string', password: 'string' })
-
     const user: UserDto = await this.userService.findUserByEmailWithPassword(email)
 
+    //User must exist or the password must match the password in the data base.
     if (!user || !(await bcryptjs.compare(password, user.password))) {
       throw new CustomError('Invalid email or password.', 401)
     }
@@ -31,12 +35,16 @@ export class AuthenticationService {
     return loggedUser
   }
 
+  /**
+   * Registers a new user with the provided email, password, and username.
+   * @param email The email address of the user to register.
+   * @param password The password of the user to register.
+   * @param username The username of the user to register.
+   * @returns A promise that resolves with the UserDto object of the newly registered user.
+   * @throws CustomError with status 409 if a user with the given email already exists.
+   */
   async register(email: string, password: string, username: string): Promise<UserDto> {
-    this.verificationUtils.validateParameters({ email, password, username }, { email: 'string', password: 'string', username: 'string' })
-
-    if (!this.validateRegisterRequest(email, password, username))
-      throw new CustomError('Registration request validation failed: Email, password, or username does not meet the required criteria.', 401)
-
+    //There cannot be two users with the same email
     if (await this.userService.findUserByEmail(email)) throw new CustomError('User already exists.', 409)
 
     const user: UserDto = await this.userService.registerUser({
@@ -47,6 +55,11 @@ export class AuthenticationService {
     return user
   }
 
+  /**
+   * Extracts a token from the authorization header.
+   * @param header The authorization header from the request, which may be a string or an array of strings.
+   * @returns The extracted token as a string if present and correctly formatted, otherwise null.
+   */
   extractTokenFromHeader(header: string | string[]): string | null {
     if (Array.isArray(header)) {
       header = header.join(' ')
@@ -57,34 +70,14 @@ export class AuthenticationService {
     return null
   }
 
-  validateLoginRequest(email: string, password: string): boolean {
-    return email.length > 0 && password.length > 0
-  }
-
+  /**
+   * Generates a JWT token for a user.
+   * This method uses the jwt library to sign a new token with the user's ID. The token is configured to expire
+   * as defined by JWT_EXPIRES and is signed using the JWT_SECRET.
+   * @param userId The unique identifier of the user for whom to generate the token.
+   * @returns A JWT token as a string.
+   */
   generateToken(userId: string): string {
     return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES })
-  }
-
-  validateRegisterRequest(email: string, password: string, username: string): boolean {
-    return email.length > 0 && password.length > 0 && username.length > 0
-  }
-
-  loginParamsExists(email: string, password: string) {
-    if (!email) throw new CustomError('You need to privide a email', 400)
-    if (!password) throw new CustomError('You need to privide a password', 400)
-  }
-
-  registerParamsExists(email: string, password: string, username: string) {
-    if (!email) throw new CustomError('You need to privide a email', 400)
-    if (!password) throw new CustomError('You need to privide a password', 400)
-    if (!username) throw new CustomError('You need to privide a username', 400)
-  }
-
-  validateParams(params: Record<string, any>) {
-    for (const [key, value] of Object.entries(params)) {
-      if (!value) {
-        throw new CustomError(`You need to provide a ${key}`, 400)
-      }
-    }
   }
 }
