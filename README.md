@@ -13,7 +13,8 @@ El presente repositorio corresponde a la prueba técnica realizada por mi person
 - [MongoDB](#MongoDB)
 - [Librerías Y Frameworks](#Librerías-Y-Frameworks)
 - [Rutas de la API](#Rutas-de-la-API)
-  -[Autenticación](#Autenticación)
+
+  - [Autenticación](#Autenticación)
   - [Usuarios](#Usuarios)
   - [Productos](#Productos)
   - [Listado de Productos](#Listado-de-Productos)
