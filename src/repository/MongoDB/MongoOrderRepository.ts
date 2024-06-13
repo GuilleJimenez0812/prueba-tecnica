@@ -1,4 +1,4 @@
-import { OrderModel } from '../../schemas/orderSchema'
+import { OrderModel } from '../../schemas/MongoDB/orderSchema'
 import { IOrderRepository } from '../Interfaces/IOrderRepository'
 import { OrderDto } from '../../dto/OrderDto'
 

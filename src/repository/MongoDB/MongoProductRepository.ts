@@ -1,5 +1,5 @@
 import { ProductDto } from '../../dto/ProductDto'
-import { ProductModel } from '../../schemas/productSchema'
+import { ProductModel } from '../../schemas/MongoDB/productSchema'
 import { IProductRepository } from '../Interfaces/IProductRepository' 
 
 export class MongoProductRepository implements IProductRepository {

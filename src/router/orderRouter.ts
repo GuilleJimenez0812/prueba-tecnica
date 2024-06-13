@@ -1,20 +1,21 @@
 import express from 'express'
 import { OrderController } from '../controllers/orderController'
 import { AuthenticationMiddleware } from '../middlewares/authenticationMiddleware'
-import { createOrderSchema } from '../dto/zodSchema/zodOrder'
+import { createOrderSchema } from '../schemas/Zod/zodOrder'
+import { idProductSchema } from '../schemas/Zod/zodIdSchema'
 
 export default (router: express.Router) => {
   const authMiddleware = new AuthenticationMiddleware()
   const orderController = new OrderController()
 
-  // Crear una nueva orden
+  // Create an Order
   router.post('/orders', authMiddleware.validate(createOrderSchema), authMiddleware.verify, orderController.createOrder)
-  // Obtener ordenes por Id de orden
+  // Obtain an order by ID
   router.get('/orders/:id', authMiddleware.verify, orderController.getOrderById)
-  // Obtener ordenes por Usuario logueado
+  // Obtain an order by user
   router.get('/orders-user', authMiddleware.verify, orderController.getOrdersByUser)
-  // Obtener todas las ordenes
-  router.patch('/orders-status/:id', authMiddleware.verify, orderController.updateOrderStatus)
-  // Cancelar orden
-  router.post('/orders-cancel/:order_id', authMiddleware.verify, orderController.cancelOrder)
+  // Update the status of the order
+  router.patch('/orders-status/:id', authMiddleware.validateId(idProductSchema), authMiddleware.verify, orderController.updateOrderStatus)
+  // Update the status of the order to cancel
+  router.post('/orders-cancel/:id', authMiddleware.validateId(idProductSchema), authMiddleware.verify, orderController.cancelOrder)
 }

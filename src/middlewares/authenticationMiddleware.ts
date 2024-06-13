@@ -129,4 +129,20 @@ export class AuthenticationMiddleware {
       }
     }
   }
+
+  /**
+   * This method validates the request parameters against a provided Zod schema.
+   * @param schema The Zod schema to validate the request parameters against.
+   * @returns A middleware function that takes a request, response, and next function, performing the validation.
+   */
+  validateId(schema: z.ZodSchema) {
+    return (req: CustomRequest, res: express.Response, next: express.NextFunction) => {
+      try {
+        schema.parse(req.params)
+        next()
+      } catch (error) {
+        return res.status(400).json({ error: error.errors })
+      }
+    }
+  }
 }

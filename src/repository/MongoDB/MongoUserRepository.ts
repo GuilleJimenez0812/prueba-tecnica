@@ -1,5 +1,5 @@
 import { IUserRepository } from '../Interfaces/IUserRepository'
-import { UserModel } from '../../schemas/userSchema'
+import { UserModel } from '../../schemas/MongoDB/userSchema'
 import { UserDto } from '../../dto/UserDto'
 
 export class MongoUserRepository implements IUserRepository {
