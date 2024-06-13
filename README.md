@@ -47,7 +47,7 @@ Instalar el proyecto con npm
     
 ## Arquitectura del sistema
 
-Este proyecto se está desarrollando bajo los principios de la Arquitectura Hexagonal y Domain-Driven Design (DDD), lo que permite una clara abstracción de las capas de infraestructura, aplicación y dominio.
+Este proyecto se desarrolló bajo los principios de la Arquitectura Hexagonal y Domain-Driven Design (DDD), lo que permite una clara abstracción de las capas de infraestructura, aplicación y dominio.
 
 Para facilitar esta abstracción, se ha establecido una estructura de carpetas organizada que encapsula cada sección del código, asegurando así un diseño modular y mantenible.
 
