@@ -24,14 +24,14 @@ Este repositorio alberga la prueba técnica desarrollada por Guillermo Jiménez.
 
 - Registro, login, modificación, eliminación y lista de usuarios.
 - Creación, modificación, actualización y eliminación de productos y listas de productos.
-- Creación de ordenes de compra.
+- Creación de órdenes de compra.
 - Cambiar estado de la orden de compra.
 - Cancelar orden de compra.
 - Historial de compras del usuario logueado.
 
-Es importante destacar que las ordenes de compra **no** pueden ser modificadas en contenido ni eliminadas del sistema, ya que es importante mantener un registro de estas acciones a lo largo del tiempo. Al momento de actualizar la orden se cambiara automaticamente al siguiente estado correspondiente del proceso, asi mismo una orden que se encuentra en el estado 'orden recibida' no puede ser cancelada.
+Es importante destacar que las órdenes de compra **no** pueden ser modificadas en contenido ni eliminadas del sistema, ya que es fundamental mantener un registro de estas acciones a lo largo del tiempo. Al momento de actualizar la orden se cambiará automáticamente al siguiente estado correspondiente del proceso, así mismo una orden que se encuentra en el estado 'orden recibida' no puede ser cancelada.
 
-Adicionalmente para probar estas funcionalidades se utlizo el marco de pruebas Vitest con la finalidad de hacer pruebas unitarias del código y comprobar que tienen el comportamiento esperado.
+Adicionalmente para probar estas funcionalidades se utilizó el marco de pruebas Vitest con la finalidad de hacer pruebas unitarias del código y comprobar que tienen el comportamiento esperado.
 
 ## Instalación del proyecto
 
@@ -74,10 +74,10 @@ La arquitectura hexagonal y el Domain-Driven Design (DDD) se complementan de man
 
 La arquitectura de este proyecto está diseñada para encapsular eficientemente las capas de aplicación, permitiendo modificaciones significativas sin requerir una reescritura del código. Tomemos, por ejemplo, los repositorios y servicios: los servicios utilizan la inyección de dependencia para interactuar con la interfaz del repositorio, que especifica los métodos y sus retornos. La implementación concreta de estos métodos, como se ve en MongoUserRepository.ts, cumple con la interfaz.
 
-Gracias a la inyección de dependencia, los servicios operan independientemente del gestor de base de datos específico, confiando en la estructura proporcionada por los DTOs definidos. Esto facilita cambios significativos, como la sustitución de la base de datos o del ORM, sin afectar los servicios, controladores y DTOs existentes, asegurando así una mayor flexibilidad y mantenibilidad del sistema.
+Gracias a la inyección de dependencia, los servicios operan independientemente del gestor de base de datos específico, confiando en la estructura proporcionada por los DTOs definidos. Esto facilita cambios considerables, como la sustitución de la base de datos o del ORM, sin afectar los servicios, controladores y DTOs existentes, asegurando así una mayor flexibilidad y mantenibilidad del sistema.
 
 ## TypeScript vs JavaScript
-Se tomo la decisción de usar TypeScript sobre JavaScript debido a los siguientes motivos:<a href="#ref2">[2]</a>:
+Se tomó la decisión de usar TypeScript sobre JavaScript debido a los siguientes motivos:<a href="#ref2">[2]</a>:
 
 - **Chequeo de Tipos Estáticos**: TypeScript permite especificar tipos de datos para variables, parámetros y valores de retorno, lo que ayuda a prevenir errores en tiempo de ejecución y facilita la depuración del código.
 - Soporte Mejorado en IDEs: Los entornos de desarrollo integrados ofrecen un mejor soporte para TypeScript, con funcionalidades como autocompletado de código y sugerencias dinámicas.
@@ -95,13 +95,13 @@ Las ventajas de usar MongoDB sobre una base de datos relacional incluyen<a href=
 - **Escalabilidad Horizontal**: MongoDB está diseñado para escalar fácilmente de manera horizontal a través del sharding, distribuyendo los datos a través de múltiples servidores para manejar grandes volúmenes de datos y tráfico.
 - **Rendimiento**: Ofrece un alto rendimiento para operaciones de lectura y escritura, y su estilo de computación en memoria para trabajar con datos reduce la necesidad de operaciones de join costosas, comunes en las bases de datos relacionales.
 - **Desarrollo Ágil**: Su modelo de datos se alinea bien con los objetos utilizados en la programación moderna, lo que simplifica el proceso de desarrollo y reduce la necesidad de mapeo de objetos complejos.
-- **Manejo de Datos Desestructurados**: Es ideal para almacenar datos desestructurados o semi-estructurados, lo que es común en aplicaciones modernas que recopilan una variedad de tipos de datos.
+- **Manejo de Datos Desestructurados**: Es ideal para almacenar datos desestructurados o semi-estructurados, lo que es usual en aplicaciones modernas que recopilan una variedad de tipos de datos.
 
 ## Librerías Y Frameworks
 
-Para la correcta ejecución de este proyecto se utilizaron varias librerias claves. A continuación se cuenta con una breve descripción y la razón de su uso:
+Para la correcta ejecución de este proyecto se utilizaron varias librerías claves. A continuación se cuenta con una breve descripción y la razón de su uso:
 
-- **bcryptjs (^2.4.3):** Se utilizá para mantener las contraseñas encryptadas en todo momento para su seguridad, gracias a esta libreria se almacenan las contraseñas en la base de datos de forma cifrada para su seguridad.
+- **bcryptjs (^2.4.3):** Se utiliza para mantener las contraseñas encriptadas en todo momento para su seguridad, gracias a esta librería se almacenan las contraseñas en la base de datos de forma cifrada para su seguridad.
 
 - **compression (^1.7.4):** Es un middleware para Express que comprime las respuestas del servidor, utilizado para mejorar la velocidad y eficiencia en la transferencia de datos.
 
@@ -111,7 +111,7 @@ Para la correcta ejecución de este proyecto se utilizaron varias librerias clav
 
 - **dotenv (^16.4.5):** Permite cargar variables de entorno desde un archivo .env, facilitando la configuración del proyecto sin revelar en el código configuraciones sensibles.
 
-- **express (^4.19.2):** Es un framework para Node.Js que facilita la creación de de aplicaciones web y APIs. Es muy reconocido por su rapidez y simplicidad, ofreciendo un conjunto de características para aplicaciones web. Express permite:
+- **express (^4.19.2):** Es un framework para Node.Js que facilita la creación de aplicaciones web y APIs. Es muy reconocido por su rapidez y simplicidad, ofreciendo un conjunto de características para aplicaciones web. Express permite:
 
     - Configurar middlewares para responder a solicitudes HTTP.
     - Definir rutas de aplicación basadas en métodos HTTP y URLs.
@@ -464,7 +464,7 @@ Para el estado de la orden se definió que la orden puede tener los estados:
 - 'order sent'
 - 'order received'
 - 'canceled'
-Para evitar posibles errores el sistema actualiza el estado de la orden automáticamente al siguiente, tomando en cuenta que 'order received' es el último y una orden con este estado no se puede cancelar.
+Para evitar posibles errores, el sistema actualiza el estado de la orden automáticamente al siguiente, tomando en cuenta que 'order received' es el último y una orden con este estado no se puede cancelar.
 
 #### Cancelar la Orden
 
