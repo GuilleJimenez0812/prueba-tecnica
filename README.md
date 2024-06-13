@@ -487,10 +487,10 @@ Un ODM está diseñado específicamente para mapear objetos a documentos en base
 
 
 ## Bibliografía
-<a href="#ref1"></a>[1] Yavé Guadaño Ibáñez                 Desde 2006, “Patrones de Arquitectura: Organización y Estructura de microservicios,” Paradigma, https://www.paradigmadigital.com/dev/patrones-arquitectura-organizacion-estructura-microservicios/#:~:text=La%20arquitectura%20hexagonal%20y%20DDD,un%20diseño%20flexible%20y%20desacoplado. (accessed Jun. 13, 2024). 
+<a name="ref1"></a>[1] Yavé Guadaño Ibáñez                 Desde 2006, “Patrones de Arquitectura: Organización y Estructura de microservicios,” Paradigma, https://www.paradigmadigital.com/dev/patrones-arquitectura-organizacion-estructura-microservicios/#:~:text=La%20arquitectura%20hexagonal%20y%20DDD,un%20diseño%20flexible%20y%20desacoplado. (accessed Jun. 13, 2024). 
 
-<a href="#ref2"></a>[2] “Typescript vs JavaScript: Which one you should use, and why,” SitePoint, https://www.sitepoint.com/typescript-vs-javascript/ (accessed Jun. 13, 2024). 
+<a name="ref2"></a>[2] “Typescript vs JavaScript: Which one you should use, and why,” SitePoint, https://www.sitepoint.com/typescript-vs-javascript/ (accessed Jun. 13, 2024). 
 
-<a href="#ref3"></a>[3] “Advantages of mongodb,” MongoDB, https://www.mongodb.com/resources/compare/advantages-of-mongodb (accessed Jun. 13, 2024). 
+<a name="ref3"></a>[3] “Advantages of mongodb,” MongoDB, https://www.mongodb.com/resources/compare/advantages-of-mongodb (accessed Jun. 13, 2024). 
 
-<a href="#ref4"></a>[4] Waleed, “MongoDB vs SQL databases: A comprehensive comparison,” RedSwitches, https://www.redswitches.com/blog/mongodb-vs-sql/ (accessed Jun. 13, 2024). 
+<a name="ref4"></a>[4] Waleed, “MongoDB vs SQL databases: A comprehensive comparison,” RedSwitches, https://www.redswitches.com/blog/mongodb-vs-sql/ (accessed Jun. 13, 2024). 
