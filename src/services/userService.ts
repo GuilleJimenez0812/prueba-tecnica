@@ -37,7 +37,7 @@ export class UserService {
    * @param email The email address of the user to find.
    * @returns A promise that resolves with a `UserDto` object representing the found user, including the password.
    */
-  async findUserByEmailWithPassword(email: string): Promise<UserDto> {
+  async findUserByEmailWithPassword(email: string): Promise<UserDto | null> {
     return await this.userRepository.getUserByEmailWithPassword(email)
   }
 

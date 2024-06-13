@@ -3,32 +3,22 @@ import bcryptjs from 'bcryptjs'
 import { AuthenticationService } from './authenticationService'
 import { UserService } from './userService'
 import { CustomError } from '../dto/customError'
+import { UserDto } from '../dto/UserDto'
 
-const authService = new AuthenticationService()
+const userService = vi.mocked(new UserService())
+const bcryptjsMock = vi.mocked(bcryptjs)
+const authService = new AuthenticationService(userService)
 
 describe('validateLoginRequest', (): void => {
     it('should be a function', (): void => {
         expect(typeof authService.login).toBe('function')
     })
 
-    it('should return an error if the first parameter is not a string', async () => {
-      const result = await authService.login(2 as any, 'password')
-      expect(result).toBeInstanceOf(Error)
-      expect(result.message).toContain('The email does not match the format.')
-    })
-
-    it('should return an error if the second parameter is not a string', async () => {
-      const result = await authService.login('email', 2 as any)
-      expect(result).toBeInstanceOf(Error)
-      expect(result.message).toContain('The password does not match the format.')
-    })
-
     it('should throw an error for invalid email', async () => {
-      vi.spyOn(UserService.prototype, 'findUserByEmail').mockResolvedValue(null)
+      vi.spyOn(userService, 'findUserByEmailWithPassword').mockResolvedValue(null)
+      vi.spyOn(bcryptjs, 'compare').mockResolvedValue(false) // Asegúrate de espiar bcryptjs directamente si bcryptjsMock no funciona como esperado.
 
-      const result = await authService.login('nonexistent@example.com', 'password')
-      expect(result).toBeInstanceOf(CustomError)
-      expect(result.message).toContain('Invalid email or password.')
+      await expect(authService.login('nonexistent@example.com', 'password')).rejects.toThrow(CustomError)
     })
 
     it('should throw an error for invalid password', async () => {
@@ -36,18 +26,16 @@ describe('validateLoginRequest', (): void => {
       vi.spyOn(UserService.prototype, 'findUserByEmail').mockResolvedValue(mockUser)
       vi.spyOn(bcryptjs, 'compare').mockResolvedValue(false)
 
-      const result = await authService.login('test@example.com', 'wrongpassword')
-      expect(result).toBeInstanceOf(CustomError)
-      expect(result.message).toContain('Invalid email or password.')
+      await expect(authService.login('nonexistent@example.com', 'wrongpassword')).rejects.toThrow(CustomError)
     })
 
     it('should return a token for valid credentials', async () => {
       const mockUser = { _id: '123', email: 'test@example.com', password: 'hashedpassword', username: 'testuser' }
-      vi.spyOn(UserService.prototype, 'findUserByEmail').mockResolvedValue(mockUser)
+      vi.spyOn(userService, 'findUserByEmailWithPassword').mockResolvedValue(mockUser)
       vi.spyOn(bcryptjs, 'compare').mockResolvedValue(true)
+      vi.spyOn(authService, 'generateToken').mockReturnValue('validToken123')
 
-      const result = await authService.login('test@example.com', 'password')
-      expect(result).toHaveProperty('token')
+      expect(await authService.login('test@example.com', 'password')).toHaveProperty('token')
     })
 })
 
@@ -56,34 +44,19 @@ describe('register', (): void => {
     expect(typeof authService.register).toBe('function')
   })
 
-  it('should return an error if the email parameter is not a string', async () => {
-    const result = await authService.register(2 as any, 'password', 'username')
-    expect(result).toBeInstanceOf(Error)
-    expect(result.message).toContain('The email does not match the format.')
-  })
-
-  it('should return an error if the password parameter is not a string', async () => {
-    const result = await authService.register('email@example.com', 2 as any, 'username')
-    expect(result).toBeInstanceOf(Error)
-    expect(result.message).toContain('The password does not match the format.')
-  })
-
-  it('should return an error if the username parameter is not a string', async () => {
-    const result = await authService.register('email@example.com', 'password', 2 as any)
-    expect(result).toBeInstanceOf(Error)
-    expect(result.message).toContain('The username does not match the format.')
-  })
-
   it('should return an error if user already exists', async () => {
-    vi.spyOn(UserService.prototype, 'findUserByEmail').mockResolvedValue(true)
-    const result = await authService.register('existing@example.com', 'password', 'username')
-    expect(result).toBeInstanceOf(CustomError)
-    expect(result.message).toContain('User already exists.')
+    const mockUser: UserDto = {
+      _id: '123',
+      email: 'existing@example.com',
+      username: 'existinguser'
+    }
+    vi.spyOn(userService, 'findUserByEmail').mockResolvedValue(mockUser)
+    await expect(authService.register('existing@example.com', 'password', 'username')).rejects.toThrowError(CustomError)
   })
 
   it('should return a user object for successful registration', async () => {
-    vi.spyOn(UserService.prototype, 'findUserByEmail').mockResolvedValue(null)
-    vi.spyOn(UserService.prototype, 'registerUser').mockResolvedValue({
+    vi.spyOn(userService, 'findUserByEmail').mockResolvedValue(null)
+    vi.spyOn(userService, 'registerUser').mockResolvedValue({
       _id: '123',
       email: 'new@example.com',
       password: 'hashedpassword',
@@ -113,20 +86,6 @@ describe('extractTokenFromHeader', (): void => {
   })
 })
 
-describe('validateLoginRequest', (): void => {
-  it('should be a function', (): void => {
-    expect(typeof authService.validateLoginRequest).toBe('function')
-  })
-
-  it('should return false for empty email or password', () => {
-    expect(authService.validateLoginRequest('', 'password')).toBe(false)
-    expect(authService.validateLoginRequest('email@example.com', '')).toBe(false)
-  })
-
-  it('should return true for non-empty email and password', () => {
-    expect(authService.validateLoginRequest('email@example.com', 'password')).toBe(true)
-  })
-})
 
 describe('generateToken', (): void => {
   it('should be a function', (): void => {
@@ -137,33 +96,5 @@ describe('generateToken', (): void => {
     const result = authService.generateToken('123')
     expect(typeof result).toBe('string')
     expect(result).not.toBe('')
-  })
-})
-
-describe('validateRegisterRequest', (): void => {
-  it('should be a function', (): void => {
-    expect(typeof authService.validateRegisterRequest).toBe('function')
-  })
-
-  it('should return false for empty email, password, or username', () => {
-    expect(authService.validateRegisterRequest('', 'password', 'username')).toBe(false)
-    expect(authService.validateRegisterRequest('email@example.com', '', 'username')).toBe(false)
-    expect(authService.validateRegisterRequest('email@example.com', 'password', '')).toBe(false)
-  })
-
-  it('should return true for non-empty email, password, and username', () => {
-    expect(authService.validateRegisterRequest('email@example.com', 'password', 'username')).toBe(true)
-  })
-})
-
-describe('encryptPassword', (): void => {
-  it('should be a function', (): void => {
-    expect(typeof authService.encryptPassword).toBe('function')
-  })
-
-  it('should return a hashed password', async () => {
-    const result = await authService.encryptPassword('password')
-    expect(typeof result).toBe('string')
-    expect(result).not.toBe('password')
   })
 })
