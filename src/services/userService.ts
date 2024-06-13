@@ -1,4 +1,4 @@
-import { UserDto } from 'dto/UserDto'
+import { UserDto } from '../dto/UserDto'
 import { IUserRepository } from '../repository/Interfaces/IUserRepository'
 import { MongoUserRepository } from '../repository/MongoDB/MongoUserRepository'
 import { UsersUtils } from '../utils/usersUtils'
